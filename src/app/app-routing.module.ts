@@ -18,7 +18,7 @@ const routes: Routes = [
         (c) => c.TodoFormComponent
       ),
   },
-  { path: "**", redirectTo: "add-todo" },
+  { path: "**", redirectTo: "todo-list" },
 ];
 
 @NgModule({

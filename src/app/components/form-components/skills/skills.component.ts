@@ -16,8 +16,7 @@ import { ButtonDirective } from 'src/app/directives/button.directive';
 export class SkillsComponent extends FieldsArrayForm {
 
   skills = this.fb.nonNullable.array<FormControl<string>>(
-    [this.createSkillControl()], [Validators.minLength(1), CustomValidators.notDuplicates()]
-  );
+    [this.createSkillControl()], [Validators.minLength(1), CustomValidators.notDuplicates()]);
 
   ngOnInit(): void {
     if (!this.formArray) {

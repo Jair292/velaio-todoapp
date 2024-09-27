@@ -1,5 +1,5 @@
 <fieldset>
-  <legend>Persons</legend>
+  <legend>{{legend}}</legend>
   <div class="fields" *ngIf="persons.length > 0" [formArrayName]="formArrayName">
     <ng-container *ngFor="let person of persons.controls; let i = index" [formGroupName]="i">
       <div class="content">
@@ -17,8 +17,8 @@
           <button type="button" size="small" [disabled]="persons.length <= 1" (click)="removePerson(i)">-</button>
         </div>
       </div>
-      <app-skills [group]="person.controls.skills" formArrayName="skills"></app-skills>
+      <app-skills formArrayName="skills" legend="Skills"></app-skills>
     </ng-container>
   </div>
-  <button type="button" [disabled]="persons.length > 2" (click)="addPerson()"> Add Person</button>
+  <button type="button" [disabled]="persons.length > 2" (click)="addPerson()"> Add {{legend}}</button>
 </fieldset>

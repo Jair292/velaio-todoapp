@@ -15,7 +15,7 @@ export const commonImports = [CommonModule, ReactiveFormsModule];
 export class FieldsArrayForm {
   @Input('group') formArray!: FormArray;
   @Input({required: true}) formArrayName: string = '';
-  @Input() label: string = 'Skills';
+  @Input() legend: string = '';
 
   fb = inject(FormBuilder);
   parentContainer = inject(ControlContainer);

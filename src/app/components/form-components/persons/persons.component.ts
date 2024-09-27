@@ -1,9 +1,10 @@
-import { Component } from '@angular/core';
-import { FormControl, Validators } from '@angular/forms';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Validators } from '@angular/forms';
 import { CustomValidators } from 'src/app/from-validators/validators';
 import { commonImports, FieldsArrayForm, viewProviders } from 'src/app/directives/fields-array-form.directive';
 import { SkillsComponent } from '../skills/skills.component';
 import { ButtonDirective } from 'src/app/directives/button.directive';
+import { Subject, takeUntil, tap } from 'rxjs';
 
 @Component({
   selector: 'app-persons',
@@ -13,9 +14,11 @@ import { ButtonDirective } from 'src/app/directives/button.directive';
   styleUrls: ['./persons.component.scss'],
   viewProviders: [...viewProviders],
 })
-export class PersonsComponent extends FieldsArrayForm {
+export class PersonsComponent extends FieldsArrayForm implements OnInit, OnDestroy {
 
   persons = this.fb.nonNullable.array([this.createPersonGroup()], [CustomValidators.notDuplicates()]);
+
+  destroy$ = new Subject<boolean>();
 
   ngOnInit(): void {
     if (!this.formArray) {
@@ -23,21 +26,26 @@ export class PersonsComponent extends FieldsArrayForm {
     } else {
       this.persons = this.formArray;
     }
+
+    this.persons.valueChanges.pipe(
+      tap(values => {
+        if (!values.length) {
+          this.addPerson();
+        }
+      }),
+      takeUntil(this.destroy$)
+    ).subscribe();
   }
 
   ngOnDestroy(): void {
     this.parentFormGroup?.removeControl(this.formArrayName);
+    this.destroy$.next(true);
   }
 
   createPersonGroup() {
     return this.fb.nonNullable.group({
       name: ['', [ Validators.required, Validators.minLength(5)]],
       age: ['', [Validators.required, Validators.min(18)]],
-      skills: this.fb.nonNullable.array<FormControl<string>>([
-        new FormControl<string>('', {
-          nonNullable: true,
-          validators: [Validators.required]})
-      ], [Validators.minLength(1), CustomValidators.notDuplicates()])
     })
   }
 

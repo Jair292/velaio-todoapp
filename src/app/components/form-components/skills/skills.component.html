@@ -1,5 +1,5 @@
 <fieldset>
-  <legend>Skills</legend>
+  <legend>{{legend}}</legend>
   <div class="fields" [formArrayName]="formArrayName">
     <ng-container *ngFor="let skill of skills.controls; let i = index">
       <div class="content">
@@ -14,5 +14,5 @@
       </div>
     </ng-container>
   </div>
-  <button type="button" [disabled]="skills.length > 2" (click)="addSkill()"> Add skill</button>
+  <button type="button" [disabled]="skills.length > 2" (click)="addSkill()"> Add {{legend}}</button>
 </fieldset>

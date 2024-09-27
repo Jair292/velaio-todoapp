@@ -5,7 +5,6 @@ import { commonImports, FieldsArrayForm, viewProviders } from 'src/app/directive
 import { SkillsComponent } from '../skills/skills.component';
 import { ButtonDirective } from 'src/app/directives/button.directive';
 import { Subject, takeUntil, tap } from 'rxjs';
-import { trackByFn } from 'src/app/helpers/common';
 
 @Component({
   selector: 'app-persons',
@@ -19,7 +18,6 @@ export class PersonsComponent extends FieldsArrayForm implements OnInit, OnDestr
 
   persons = this.fb.nonNullable.array([this.createPersonGroup()], [CustomValidators.notDuplicates()]);
   destroy$ = new Subject<boolean>();
-  trackByFn = trackByFn;
 
   ngOnInit(): void {
     if (!this.formArray) {

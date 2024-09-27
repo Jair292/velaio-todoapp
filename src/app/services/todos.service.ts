@@ -31,10 +31,6 @@ export class ToDosService {
     ).subscribe();
   }
 
-  getToDos() {
-    return this.#todos;
-  }
-
   addToDo(todo: Partial<ToDo>) {
     if (!todo.name || !todo.persons || !todo.endDate) {
       throw new Error('Missing required properties to create a new ToDo');
@@ -51,7 +47,7 @@ export class ToDosService {
     this.#todos.next([...this.#todos.value, newToDo]);
   }
 
-  updateToDo(id: number, config:{ prop: keyof ToDo, value?: any } = { prop: 'status' }) {
+  updateToDo(id: number, config: { prop: keyof ToDo, value?: any } = { prop: 'status' }) {
     const updatedTodos: ToDo[] = this.#todos.value.map((todo: ToDo) => {
       if (todo.id === id) {
         if (config.prop === 'status') {

@@ -1,7 +1,7 @@
 <fieldset>
   <legend>{{legend}}</legend>
   <div class="fields" *ngIf="persons.length > 0" [formArrayName]="formArrayName">
-    <ng-container *ngFor="let person of persons.controls; let i = index" [formGroupName]="i">
+    <ng-container *ngFor="let person of persons.controls; let i = index; trackBy: trackByFn" [formGroupName]="i">
       <div class="content">
         <div class="list">
           <div class="field">

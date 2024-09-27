@@ -7,7 +7,6 @@ import { ToDosService } from './services/todos.service';
   styleUrls: ['./app.component.scss'],
 })
 export class AppComponent {
-  title = 'velaio-todoapp';
   toDoService = inject(ToDosService);
 
   ngOnInit() {

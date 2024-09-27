@@ -19,8 +19,8 @@ export class HeaderComponent implements OnInit {
 
   ngOnInit() {
     this.router.events.pipe(
-      filter(event => event instanceof NavigationEnd),
-    ).subscribe((event: any) => {
+      filter((event): event is NavigationEnd => event instanceof NavigationEnd),
+    ).subscribe((event) => {
       this.currentUrl = event.url;
       this.cd.markForCheck();
     });

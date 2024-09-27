@@ -1,29 +1,46 @@
-import { TestBed } from '@angular/core/testing';
-import { RouterTestingModule } from '@angular/router/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { AppComponent } from './app.component';
+import { ToDosService } from './services/todos.service';
+import { HeaderComponent } from './components/header/header.component';
+import { ActivatedRoute, RouterModule, RouterOutlet } from '@angular/router';
+import { of } from 'rxjs';
 
 describe('AppComponent', () => {
-  beforeEach(() => TestBed.configureTestingModule({
-    imports: [RouterTestingModule],
-    declarations: [AppComponent]
-  }));
+  let component: AppComponent;
+  let fixture: ComponentFixture<AppComponent>;
+  let toDoServiceSpy: jasmine.SpyObj<ToDosService>;
+  let activatedRouteSpy: jasmine.SpyObj<ActivatedRoute>;
+  let routerOutletSpy: jasmine.SpyObj<RouterOutlet>;
 
-  it('should create the app', () => {
-    const fixture = TestBed.createComponent(AppComponent);
-    const app = fixture.componentInstance;
-    expect(app).toBeTruthy();
+  beforeEach(async () => {
+    toDoServiceSpy = jasmine.createSpyObj('ToDosService', ['requestToDos', 'requestSkills']);
+    activatedRouteSpy = jasmine.createSpyObj('ActivatedRoute', ['snapshot'], { params: of({}) });
+    routerOutletSpy = jasmine.createSpyObj('RouterOutlet', ['activateEvents']);
+
+    await TestBed.configureTestingModule({
+      imports: [HeaderComponent, RouterModule],
+      declarations: [AppComponent],
+      providers: [
+        { provide: ToDosService, useValue: toDoServiceSpy },
+        { provide: ActivatedRoute, useValue: activatedRouteSpy },
+        { provide: RouterOutlet, useValue: routerOutletSpy }
+      ]
+    }).compileComponents();
   });
 
-  it(`should have as title 'velaio-todoapp'`, () => {
-    const fixture = TestBed.createComponent(AppComponent);
-    const app = fixture.componentInstance;
-    expect(app.title).toEqual('velaio-todoapp');
+  beforeEach(() => {
+    fixture = TestBed.createComponent(AppComponent);
+    component = fixture.componentInstance;
   });
 
-  it('should render title', () => {
-    const fixture = TestBed.createComponent(AppComponent);
-    fixture.detectChanges();
-    const compiled = fixture.nativeElement as HTMLElement;
-    expect(compiled.querySelector('.content span')?.textContent).toContain('velaio-todoapp app is running!');
+  it('should create the app component', () => {
+    expect(component).toBeTruthy();
+  });
+
+  it('should call requestToDos and requestSkills on init', () => {
+    component.ngOnInit();
+
+    expect(toDoServiceSpy.requestToDos).toHaveBeenCalled();
+    expect(toDoServiceSpy.requestSkills).toHaveBeenCalled();
   });
 });

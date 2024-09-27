@@ -1,9 +1,10 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
-import { AbstractControl, FormControl, Validators } from '@angular/forms';
+import { FormControl, Validators } from '@angular/forms';
 import { commonImports, FieldsArrayForm, viewProviders } from 'src/app/directives/fields-array-form.directive';
 import { CustomValidators } from 'src/app/from-validators/validators';
 import { ButtonDirective } from 'src/app/directives/button.directive';
 import { ToDosService } from 'src/app/services/todos.service';
+import { trackByFn } from 'src/app/helpers/common';
 
 @Component({
   selector: 'app-skills',
@@ -18,9 +19,9 @@ export class SkillsComponent extends FieldsArrayForm {
   toDoService = inject(ToDosService);
 
   skillList$ = this.toDoService.skills$;
-
   skills = this.fb.nonNullable.array<FormControl<string>>(
     [this.createSkillControl()], [Validators.minLength(1), CustomValidators.notDuplicates()]);
+  trackByFn = trackByFn;
 
   ngOnInit(): void {
     if (!this.formArray) {

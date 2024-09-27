@@ -1,5 +1,5 @@
 import { FormGroup, FormControl, FormArray } from '@angular/forms';
-import { CustomValidators } from './validators';
+import { CustomValidators, DuplicateNameError } from './validators';
 
 describe('CustomValidators', () => {
   describe('notDuplicates', () => {
@@ -24,10 +24,10 @@ describe('CustomValidators', () => {
         new FormControl('test1'),
       ]);
       const validator = CustomValidators.notDuplicates();
-      const result = validator(formArray);
+      const result = validator(formArray) as DuplicateNameError;
       expect(result).not.toBeNull();
-      // expect(result.duplicated).toBe(true);
-      // expect(result.name).toEqual(['test1']);
+      expect(result['duplicated']).toBe(true)
+      expect(result['name']).toEqual(['test1']);
     });
 
     it('should return error if duplicates are found in nested form groups', () => {
@@ -39,10 +39,10 @@ describe('CustomValidators', () => {
       });
       const formArray = new FormArray([formGroup1, formGroup2]);
       const validator = CustomValidators.notDuplicates('name');
-      const result = validator(formArray);
+      const result = validator(formArray) as DuplicateNameError;;
       expect(result).not.toBeNull();
-      // expect(result.duplicated).toBe(true);
-      // expect(result.name).toEqual(['test1']);
+      expect(result['duplicated']).toBe(true);
+      expect(result['name']).toEqual(['test1']);
     });
   });
 });

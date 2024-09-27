@@ -1,6 +1,6 @@
 import { AbstractControl, FormArray, FormControl, ValidationErrors } from "@angular/forms";
 
-type DuplicateNameError = { duplicated: boolean, name: string[] };
+export type DuplicateNameError = { duplicated: boolean, name: string[] };
 
 export class CustomValidators {
 
@@ -34,7 +34,7 @@ export class CustomValidators {
         }
       }
 
-      if (result.name.length > 0) {
+      if (result.duplicated) {
         return result;
       }
       return null;

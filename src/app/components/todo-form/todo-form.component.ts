@@ -1,7 +1,6 @@
 import { ChangeDetectionStrategy, Component, inject, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormArray, FormBuilder, FormGroupDirective, ReactiveFormsModule, Validators } from '@angular/forms';
-import { CustomValidators } from 'src/app/from-validators/validators';
 import { ButtonDirective } from 'src/app/directives/button.directive';
 import { ToDosService } from 'src/app/services/todos.service';
 import { ToDo } from 'src/app/models/todo';

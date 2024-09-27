@@ -4,7 +4,7 @@ import { Observable } from 'rxjs';
 import { ToDo } from '../models/todo';
 import { faker } from '@faker-js/faker';
 
-const skills = [
+const skillsList = [
   'Angular',
   'React',
   'Vue',
@@ -44,13 +44,15 @@ export class InmemoryService implements InMemoryDbService {
             {
               name: `${faker.person.firstName()} ${faker.person.lastName()}`,
               age: faker.number.int({min: 18, max: 45}),
-              skills: [faker.helpers.arrayElement(skills)]
+              skills: [faker.helpers.arrayElement(skillsList)]
             }
           ]
         }
       })
     ];
 
-    return { todos };
+    const skills = skillsList;
+
+    return { todos, skills };
   }
 }

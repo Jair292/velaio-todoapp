@@ -12,11 +12,21 @@ export class ToDosService {
   #http = inject(HttpClient);
   #todos = new BehaviorSubject<ToDo[]>([]);
   todos$: Observable<ToDo[]> = this.#todos.asObservable();
+  #skills = new BehaviorSubject<string[]>([]);
+  skills$: Observable<string[]> = this.#skills.asObservable();
 
   requestToDos() {
     this.#http.get<ToDo[]>('/api/todos').pipe(
       tap(data => {
         this.#todos.next(data);
+      })
+    ).subscribe();
+  }
+
+  requestSkills() {
+    this.#http.get<string[]>('/api/skills').pipe(
+      tap(data => {
+        this.#skills.next(data);
       })
     ).subscribe();
   }

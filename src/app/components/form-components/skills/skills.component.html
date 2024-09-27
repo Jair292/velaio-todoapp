@@ -5,7 +5,7 @@
       <div class="content">
         <div class="list">
           <div class="field">
-            <input type="text" [formControlName]="i" id="skill-{{i}}">
+            <input type="text" [formControlName]="i" id="skill-{{i}}" list="skills">
           </div>
         </div>
         <div class="field-actions">
@@ -13,6 +13,11 @@
         </div>
       </div>
     </ng-container>
+    <datalist id="skills">
+      <ng-container *ngFor="let skill of ( skillList$ | async ); let i = index">
+        <option [value]="skill">{{skill}}</option>
+      </ng-container>
+    </datalist>
   </div>
   <button type="button" [disabled]="skills.length > 2" (click)="addSkill()"> Add {{legend}}</button>
 </fieldset>

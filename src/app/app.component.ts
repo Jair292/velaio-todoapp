@@ -12,5 +12,6 @@ export class AppComponent {
 
   ngOnInit() {
     this.toDoService.requestToDos();
+    this.toDoService.requestSkills();
   }
 }

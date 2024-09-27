@@ -45,16 +45,18 @@ export class PersonsComponent extends FieldsArrayForm implements OnInit, OnDestr
   createPersonGroup() {
     return this.fb.nonNullable.group({
       name: ['', [ Validators.required, Validators.minLength(5)]],
-      age: ['', [Validators.required, Validators.min(18)]],
+      age: ['', [Validators.required, Validators.min(19)]],
     })
   }
 
   addPerson() {
+    if (this.persons.length > 2) return;
     const personGroup = this.createPersonGroup();
     this.persons.push(personGroup);
   }
 
   removePerson(i: number) {
+    if (this.persons.length < 2) return;
     this.persons.removeAt(i);
   }
 }

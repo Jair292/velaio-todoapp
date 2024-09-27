@@ -1,8 +1,9 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { AbstractControl, FormControl, Validators } from '@angular/forms';
 import { commonImports, FieldsArrayForm, viewProviders } from 'src/app/directives/fields-array-form.directive';
 import { CustomValidators } from 'src/app/from-validators/validators';
 import { ButtonDirective } from 'src/app/directives/button.directive';
+import { ToDosService } from 'src/app/services/todos.service';
 
 @Component({
   selector: 'app-skills',
@@ -14,6 +15,9 @@ import { ButtonDirective } from 'src/app/directives/button.directive';
   viewProviders: [...viewProviders]
 })
 export class SkillsComponent extends FieldsArrayForm {
+  toDoService = inject(ToDosService);
+
+  skillList$ = this.toDoService.skills$;
 
   skills = this.fb.nonNullable.array<FormControl<string>>(
     [this.createSkillControl()], [Validators.minLength(1), CustomValidators.notDuplicates()]);
@@ -37,10 +41,12 @@ export class SkillsComponent extends FieldsArrayForm {
   }
 
   addSkill() {
+    if (this.skills.length > 2) return;
     this.skills.push(this.createSkillControl());
   }
 
   removeSkill(i: number) {
+    if (this.skills.length < 2) return;
     this.skills.removeAt(i);
   }
 }

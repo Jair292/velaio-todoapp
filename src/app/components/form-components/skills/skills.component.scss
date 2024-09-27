@@ -1,0 +1,10 @@
+@import '../../../styles/form.scss';
+@import '../../../styles/variables.scss';
+
+:host {
+  padding: $padding;
+}
+
+.content {
+  margin-bottom: $margin;
+}

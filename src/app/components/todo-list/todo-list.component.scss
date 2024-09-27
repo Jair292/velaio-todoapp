@@ -1,0 +1,63 @@
+@import '../../styles/variables.scss';
+
+@mixin baseLayout() {
+  display: flex;
+  flex-flow: column;
+  padding: $padding;
+}
+
+:host {
+  display: flex;
+  flex-flow: column;
+  width: 100%;
+  justify-content: center;
+  flex-grow: 1;
+  .todos-container, .todo {
+    @include baseLayout();
+  }
+
+  .actions {
+    display: flex;
+    justify-content: space-between;
+    padding: $padding;
+    border: $border-color 1px solid;
+    border-radius: $border-radius;
+    margin-bottom: $margin;
+  }
+
+  .todos-container {
+    border: $border-color 1px solid;
+    border-radius: $border-radius;
+
+    .no-todos {
+      font-size: $font-size-small;
+    }
+
+    .todo {
+      padding: $padding;
+      &:not(:last-child) {
+        border-bottom: $border-color 1px solid;
+      }
+
+      .todo-title {
+        font-weight: bold;
+        font-size: $font-size-medium;
+        padding-bottom: $padding;
+      }
+      .todo-sub-title {
+        font-size: $font-size-small;
+        padding-bottom: $padding;
+      }
+
+      .person-name, .person-skills {
+        padding: $padding;
+        font-size: $font-size-small;
+      }
+
+      .person-container {
+        display: flex;
+        flex-flow: column;
+      }
+    }
+  }
+}

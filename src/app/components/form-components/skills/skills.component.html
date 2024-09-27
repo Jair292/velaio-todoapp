@@ -1,0 +1,18 @@
+<fieldset>
+  <legend>Skills</legend>
+  <div class="fields" *ngIf="skills.length > 0" [formArrayName]="formArrayName">
+    <ng-container *ngFor="let skill of skills.controls; let i = index">
+      <div class="content">
+        <div class="list">
+          <div class="field">
+            <input type="text" [formControlName]="i" id="skill-{{i}}">
+          </div>
+        </div>
+        <div class="field-actions">
+          <button type="button" [disabled]="skills.length <= 1" (click)="removeSkill(i)">-</button>
+        </div>
+      </div>
+    </ng-container>
+  </div>
+  <button type="button" [disabled]="skills.length > 2" (click)="addSkill()"> Add skill</button>
+</fieldset>

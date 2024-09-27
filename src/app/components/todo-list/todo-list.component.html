@@ -1,0 +1,34 @@
+<h1>ToDo List</h1>
+<ng-container *ngIf="(todos$ |async)?.length; else noTodos">
+  <div class="actions">
+    Filter:
+    <!-- <button (click)="filter()">All</button><button (click)="filter('open')">Open</button><button (click)="filter('closed')">Closed</button> -->
+     <input type="radio" name="filter" id="filter-all" [value]="undefined" [(ngModel)]="filterValue"><label for="filter-all">All</label>
+     <input type="radio" name="filter" id="filter-open" [value]="'open'" [(ngModel)]="filterValue"><label for="filter-open">Open</label>
+     <input type="radio" name="filter" id="filter-closed" [value]="'closed'" [(ngModel)]="filterValue"><label for="filter-closed">Closed</label>
+  </div>
+  <div class="todos-container">
+    <ng-container *ngIf="(todos$ | async) | toDoFilter:filterValue  as filteredToDos">
+      <div *ngIf="filteredToDos.length == 0" class="no-todos">
+        No ToDos
+      </div>
+      <div class="todo" *ngFor="let todo of filteredToDos; let i = index; trackBy: trackByToDoFn">
+        <span class="todo-title">{{i+1}}.
+          <input type="checkbox" (click)="changeStatus(i)" [checked]="getStatus(todo.status)"/> {{todo.name | titlecase}} - {{todo.endDate | date}}</span>
+        <span class="todo-sub-title">Associated people:</span>
+        <div class="person-container" *ngFor="let person of todo.persons; let j = index; trackBy: trackByPersonFn">
+          <span class="person-name">- {{person.name}} ({{person.age}})</span>
+          <span class="person-skills">
+            Skills: <ng-container *ngFor="let skill of person.skills; let k = index; trackBy: trackBySkillFn">
+              {{skill}}
+            </ng-container>
+          </span>
+        </div>
+      </div>
+    </ng-container>
+  </div>
+</ng-container>
+
+<ng-template #noTodos>
+  <app-loader></app-loader>
+</ng-template>

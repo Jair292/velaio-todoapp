@@ -1,0 +1,39 @@
+# Node modules
+node_modules/
+
+# Angular build output
+dist/
+out-tsc/
+build/
+
+# Temporary files and logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+package-lock.json
+yarn.lock
+*.log
+
+# IDE specific files
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+.DS_Store
+
+# Compiled output
+*.js
+*.d.ts
+*.js.map
+*.tsbuildinfo
+
+# Mac system files
+.DS_Store
+
+# Coverage directory for tests
+coverage/
+
+# Compiled and generated files
+.angular/

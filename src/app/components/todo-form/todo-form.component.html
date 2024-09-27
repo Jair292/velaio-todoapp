@@ -1,0 +1,13 @@
+<form [formGroup]="todoForm" (ngSubmit)="onSubmit()">
+  <h1>Add ToDo</h1>
+  <div class="field">
+    <label for="name">Name</label>
+    <input type="text" formControlName="name" id="name">
+  </div>
+  <div class="field">
+    <label for="endDate">End Date</label>
+    <input type="date" formControlName="endDate" id="endDate">
+  </div>
+  <app-persons [group]="persons" formArrayName="persons"></app-persons>
+  <button>Save ToDo</button>
+</form>

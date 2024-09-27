@@ -1,0 +1,23 @@
+@import './styles/variables.scss';
+
+:host {
+  display: flex;
+  align-items: center;
+  flex-flow: column;
+  width: 352px;
+  background-color: $background-color;
+  font-family: $font-family;
+  color: $font-color;
+  padding: $padding;
+  overflow: scroll;
+  margin: 30px;
+  border-radius: $border-radius;
+}
+
+.host-header {
+  width: 100%;
+}
+
+main {
+  width: 100%;
+}

@@ -1,22 +1,17 @@
-import { Component, inject } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { ControlContainer, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Component } from '@angular/core';
+import { FormControl, Validators } from '@angular/forms';
 import { CustomValidators } from 'src/app/from-validators/validators';
-import { FieldsArrayForm } from 'src/app/directives/fields-array-form.directive';
+import { commonImports, FieldsArrayForm, viewProviders } from 'src/app/directives/fields-array-form.directive';
 import { SkillsComponent } from '../skills/skills.component';
+import { ButtonDirective } from 'src/app/directives/button.directive';
 
 @Component({
   selector: 'app-persons',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, SkillsComponent],
+  imports: [...commonImports, SkillsComponent, ButtonDirective],
   templateUrl: './persons.component.html',
   styleUrls: ['./persons.component.scss'],
-  viewProviders: [
-    {
-      provide: ControlContainer,
-      useFactory: () => inject(ControlContainer, {skipSelf: true}),
-    }
-  ]
+  viewProviders: [...viewProviders],
 })
 export class PersonsComponent extends FieldsArrayForm {
 
@@ -35,10 +30,14 @@ export class PersonsComponent extends FieldsArrayForm {
   }
 
   createPersonGroup() {
-    return this.fb.group({
+    return this.fb.nonNullable.group({
       name: ['', [ Validators.required, Validators.minLength(5)]],
       age: ['', [Validators.required, Validators.min(18)]],
-      skills: this.fb.array<string>([], [CustomValidators.minLength(1)])
+      skills: this.fb.nonNullable.array<FormControl<string>>([
+        new FormControl<string>('', {
+          nonNullable: true,
+          validators: [Validators.required]})
+      ], [Validators.minLength(1), CustomValidators.notDuplicates()])
     })
   }
 

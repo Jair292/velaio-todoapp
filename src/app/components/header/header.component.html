@@ -1,2 +1,2 @@
-<button class="nav-link" [routerLink]="['/todo-list']">ToDo List</button>
-<button class="nav-link" [routerLink]="['/add-todo']">Add ToDo</button>
+<button class="nav-link" [class.active]="currentUrl === '/todo-list'" [routerLink]="['/todo-list']">ToDo List</button>
+<button class="nav-link" [class.active]="currentUrl === '/add-todo'" [routerLink]="['/add-todo']">Add ToDo</button>

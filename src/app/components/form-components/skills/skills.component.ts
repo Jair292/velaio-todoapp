@@ -1,26 +1,23 @@
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { ControlContainer, ReactiveFormsModule, Validators } from '@angular/forms';
-import { FieldsArrayForm } from 'src/app/directives/fields-array-form.directive';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { AbstractControl, FormControl, Validators } from '@angular/forms';
+import { commonImports, FieldsArrayForm, viewProviders } from 'src/app/directives/fields-array-form.directive';
 import { CustomValidators } from 'src/app/from-validators/validators';
+import { ButtonDirective } from 'src/app/directives/button.directive';
 
 @Component({
   selector: 'app-skills',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [...commonImports, ButtonDirective],
   templateUrl: './skills.component.html',
   styleUrls: ['./skills.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  viewProviders: [
-    {
-      provide: ControlContainer,
-      useFactory: () => inject(ControlContainer, {skipSelf: true}),
-    }
-  ]
+  viewProviders: [...viewProviders]
 })
 export class SkillsComponent extends FieldsArrayForm {
 
-  skills = this.fb.nonNullable.array<string>([], [CustomValidators.minLength(1)]);
+  skills = this.fb.nonNullable.array<FormControl<string>>(
+    [this.createSkillControl()], [Validators.minLength(1), CustomValidators.notDuplicates()]
+  );
 
   ngOnInit(): void {
     if (!this.formArray) {
@@ -35,7 +32,9 @@ export class SkillsComponent extends FieldsArrayForm {
   }
 
   createSkillControl() {
-    return this.fb.nonNullable.control('', [Validators.required]);
+    return new FormControl<string>('', {
+      nonNullable: true,
+      validators: [Validators.required]});
   }
 
   addSkill() {

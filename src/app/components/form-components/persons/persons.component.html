@@ -14,7 +14,7 @@
           </div>
         </div>
         <div class="field-actions">
-          <button type="button" [disabled]="persons.length <= 1" (click)="removePerson(i)">-</button>
+          <button type="button" size="small" [disabled]="persons.length <= 1" (click)="removePerson(i)">-</button>
         </div>
       </div>
       <app-skills [group]="person.controls.skills" formArrayName="skills"></app-skills>

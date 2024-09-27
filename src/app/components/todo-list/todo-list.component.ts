@@ -1,9 +1,9 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Person, ToDo } from 'src/app/models/todo';
 import { LoaderComponent } from '../loader/loader.component';
 import { ToDoFilterPipe } from 'src/app/pipes/todofilter.pipe';
-import { TodosService } from 'src/app/services/todos.service';
+import { ToDosService } from 'src/app/services/todos.service';
 import { ButtonDirective } from 'src/app/directives/button.directive';
 import { FormsModule } from '@angular/forms';
 
@@ -15,16 +15,12 @@ import { FormsModule } from '@angular/forms';
   styleUrls: ['./todo-list.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class TodoListComponent implements OnInit {
-  toDoService = inject(TodosService);
+export class TodoListComponent {
+  toDoService = inject(ToDosService);
   cd = inject(ChangeDetectorRef);
 
   filterValue: ToDo['status'] | undefined = undefined;
   todos$ = this.toDoService.todos$;
-
-  ngOnInit() {
-    this.toDoService.requestToDos();
-  }
 
   trackByToDoFn(index: number, item: ToDo): number | string {
     return  item.id;
@@ -46,7 +42,7 @@ export class TodoListComponent implements OnInit {
     return status == 'open' ? false : true;
   }
 
-  changeStatus(idx: number) {
-    this.toDoService.updateToDo(idx);
+  changeStatus(id: number) {
+    this.toDoService.updateToDo(id);
   }
 }

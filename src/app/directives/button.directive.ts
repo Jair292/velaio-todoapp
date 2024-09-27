@@ -6,14 +6,14 @@ import { Directive, HostBinding, Input, OnChanges, SimpleChanges } from '@angula
 })
 export class ButtonDirective implements OnChanges {
   @Input()
-  primary = true;
+  size = 'normal';
 
   @HostBinding('class')
-  class: string = 'btn btn-primary';
+  class: string = 'btn';
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes['primary']) {
-      this.class = this.primary ? 'btn btn-primary' : 'btn btn-secondary';
+    if (changes['size']) {
+      this.class = `btn ${this.size}`;
     }
   }
 }

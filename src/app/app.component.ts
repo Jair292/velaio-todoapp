@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
+import { ToDosService } from './services/todos.service';
 
 @Component({
   selector: 'app-root',
@@ -7,4 +8,9 @@ import { Component } from '@angular/core';
 })
 export class AppComponent {
   title = 'velaio-todoapp';
+  toDoService = inject(ToDosService);
+
+  ngOnInit() {
+    this.toDoService.requestToDos();
+  }
 }

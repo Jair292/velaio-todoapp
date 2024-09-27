@@ -18,11 +18,16 @@
 
   .actions {
     display: flex;
-    justify-content: space-between;
+    justify-content: flex-start;
     padding: $padding;
     border: $border-color 1px solid;
     border-radius: $border-radius;
     margin-bottom: $margin;
+    overflow: scroll;
+
+    span, label {
+      margin-right: $margin;
+    }
   }
 
   .todos-container {

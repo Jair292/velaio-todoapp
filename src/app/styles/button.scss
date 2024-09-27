@@ -13,6 +13,14 @@
   user-select: none;
   -webkit-user-select: none;
   touch-action: manipulation;
+  &:disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
+  }
+
+  &.small {
+    padding: 0.4em 1.2em;
+  }
 }
 
 .btn.active:before {

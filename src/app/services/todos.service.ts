@@ -2,11 +2,12 @@ import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { ToDo } from '../models/todo';
 import { BehaviorSubject, Observable, tap } from 'rxjs';
+import { faker } from '@faker-js/faker';
 
 @Injectable({
   providedIn: 'root'
 })
-export class TodosService {
+export class ToDosService {
 
   #http = inject(HttpClient);
   #todos = new BehaviorSubject<ToDo[]>([]);
@@ -24,34 +25,40 @@ export class TodosService {
     return this.#todos;
   }
 
-  addToDo(todo: ToDo) {
-    this.#todos.next([...this.#todos.value, todo]);
+  addToDo(todo: Partial<ToDo>) {
+    if (!todo.name || !todo.persons || !todo.endDate) {
+      throw new Error('Missing required properties to create a new ToDo');
+    }
+
+    const newToDo: ToDo = {
+      id: faker.number.int({min: 10, max: 100}),
+      name: todo.name,
+      persons: todo.persons,
+      endDate: todo.endDate,
+      status: 'open'
+    };
+
+    this.#todos.next([...this.#todos.value, newToDo]);
   }
 
-  removeToDo(id: number) {
-    // this.#todos.next(this.#todos..filter(todo => todo.id !== id));
-  }
-
-  updateToDo(idx: number, config:{ prop: keyof ToDo, value?: any } = { prop: 'status' }) {
-    this.#todos.next(this.#todos.value.map(
-      (todo: ToDo, index: number) => {
-        if (index == idx) {
-          if (config.prop == 'status' ) {
-            const status = todo.status === 'open' ? 'closed' : 'open';
-            return {
-              ...todo,
-              status
-            }
-          }
-
+  updateToDo(id: number, config:{ prop: keyof ToDo, value?: any } = { prop: 'status' }) {
+    const updatedTodos: ToDo[] = this.#todos.value.map((todo: ToDo) => {
+      if (todo.id === id) {
+        if (config.prop === 'status') {
+          const status = todo.status === 'open' ? 'closed' : 'open';
           return {
             ...todo,
-            [config.prop]: config.value
-          }
-
+            status
+          };
         }
-        return todo;
-      })
-    );
+        return {
+          ...todo,
+          [config.prop]: config.value
+        };
+      }
+      return todo;
+    });
+
+    this.#todos.next(updatedTodos);
   }
 }

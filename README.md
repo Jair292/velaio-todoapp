@@ -2,6 +2,9 @@
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 16.2.16.
 
+## Important<!warning>
+The declarative approach changes are not able to update the database directly because of the dependency of faker(InMemoryDB) which do not provide API to update the data in the simulated DB.
+
 ## Development server
 
 Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.

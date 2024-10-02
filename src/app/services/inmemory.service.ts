@@ -52,7 +52,7 @@ export class InmemoryService implements InMemoryDbService {
     ];
 
     const skills = skillsList;
-
+    console.log('inmemory service is working');
     return { todos, skills };
   }
 }

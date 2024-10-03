@@ -1,5 +1,5 @@
 <h1>ToDo List</h1>
-<ng-container *ngIf="(todos$ | async); else noTodos">
+<ng-container *ngIf="(todos$ | async)?.length; else noTodos">
   <div class="actions">
     <span>Filter:</span>
     <input type="radio" name="filter" id="filter-all" [value]="undefined" checked (change)="updateFilterValue(undefined)"><label for="filter-all">All</label>

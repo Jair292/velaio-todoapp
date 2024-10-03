@@ -17,7 +17,7 @@ import { trackByFn } from 'src/app/helpers/common';
 })
 export class SkillsComponent extends FieldsArrayForm {
   toDoService = inject(ToDosService);
-  skillList$ = this.toDoService.requestSkills();
+  skillList$ = this.toDoService.skills$;
 
   skills = this.fb.nonNullable.array<FormControl<string>>(
     [this.createSkillControl()], [Validators.minLength(1), CustomValidators.notDuplicates()]);

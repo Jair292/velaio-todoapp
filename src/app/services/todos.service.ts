@@ -10,12 +10,21 @@ import { faker } from '@faker-js/faker';
 export class ToDosService {
   #http = inject(HttpClient);
 
+  #todos = new BehaviorSubject<ToDo[]>([]);
+  todos$: Observable<ToDo[]> = this.#todos.asObservable();
+  #skills = new BehaviorSubject<string[]>([]);
+  skills$: Observable<string[]> = this.#skills.asObservable();
+
   requestToDos() {
-    return this.#http.get<ToDo[]>('/api/todos');
+    this.#http.get<ToDo[]>('/api/todos').pipe(
+      tap(todos => this.#todos.next(todos))
+    ).subscribe();
   }
 
   requestSkills() {
-    return this.#http.get<string[]>('/api/skills');
+    this.#http.get<string[]>('/api/skills').pipe(
+      tap(skills => this.#skills.next(skills))
+    ).subscribe();
   }
 
   addToDo(todo: Partial<ToDo>) {
@@ -30,13 +39,15 @@ export class ToDosService {
       endDate: todo.endDate,
       status: 'open'
     };
+    this.#todos.next([...this.#todos.value, newToDo]);
 
     return this.#http.post('/api/todos', newToDo);
   }
 
   updateToDo(todo: ToDo, config: { prop: keyof ToDo, value?: any } = { prop: 'status' }) {
-    const updatedTodo = { ...todo, ...config };
-    console.log('asdasd')
+    const updatedTodo = { ...todo, [config.prop]: config.value };
+    this.#todos.next(this.#todos.value.map(t => t.id === todo.id ? updatedTodo : t));
+
     return this.#http.put(`/api/todos/${todo.id}`, updatedTodo);
   }
 }

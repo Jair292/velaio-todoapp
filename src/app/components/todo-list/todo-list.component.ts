@@ -29,15 +29,13 @@ export class TodoListComponent {
   filterValue$ = new BehaviorSubject<ToDo["status"] | undefined>(undefined);
   refreshTrigger$ = new BehaviorSubject<void>(undefined);
 
-  todos$ = this.refreshTrigger$.pipe(
-    switchMap(() => this.toDoService.requestToDos())
-  );
+  todos$ = this.toDoService.todos$;
+
   filteredTodos$ = combineLatest([this.todos$, this.filterValue$]).pipe(
     map(([todos, filterValue]) => this.filterData(todos, filterValue))
   );
 
   filterData(data: ToDo[], filterValue: ToDo["status"] | undefined) {
-    console.log('filtering');
     return data.filter((todo) => {
       if (!filterValue) {
         return true;

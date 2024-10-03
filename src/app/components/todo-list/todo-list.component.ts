@@ -6,7 +6,7 @@ import { ToDoFilterPipe } from 'src/app/pipes/todofilter.pipe';
 import { ToDosService } from 'src/app/services/todos.service';
 import { ButtonDirective } from 'src/app/directives/button.directive';
 import { FormsModule } from '@angular/forms';
-import { BehaviorSubject, combineLatest, map, Observable, switchMap, tap } from 'rxjs';
+import { BehaviorSubject, combineLatest, map, tap } from 'rxjs';
 
 @Component({
   selector: "app-todo-list",

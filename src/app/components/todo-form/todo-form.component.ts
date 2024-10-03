@@ -35,12 +35,10 @@ export class TodoFormComponent {
   }
 
   onSubmit() {
-    // if (this.todoForm.invalid) {
-    //   return;
-    // }
-    console.log('1',this.todoForm.value);
+    if (this.todoForm.invalid) {
+      return;
+    }
     this.submitedTrigger$.next();
     this.formDir.resetForm();
-    console.log('2',this.todoForm.value);
   }
 }

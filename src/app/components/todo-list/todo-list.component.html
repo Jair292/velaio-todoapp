@@ -1,19 +1,19 @@
 <h1>ToDo List</h1>
-<ng-container *ngIf="(todos$ |async)?.length; else noTodos">
+<ng-container *ngIf="(todos$ | async); else noTodos">
   <div class="actions">
     <span>Filter:</span>
-    <input type="radio" name="filter" id="filter-all" [value]="undefined" [(ngModel)]="filterValue"><label for="filter-all">All</label>
-    <input type="radio" name="filter" id="filter-open" value="open" [(ngModel)]="filterValue"><label for="filter-open">Open</label>
-    <input type="radio" name="filter" id="filter-closed" value="closed" [(ngModel)]="filterValue"><label for="filter-closed">Closed</label>
+    <input type="radio" name="filter" id="filter-all" [value]="undefined" checked (change)="updateFilterValue(undefined)"><label for="filter-all">All</label>
+    <input type="radio" name="filter" id="filter-open" value="open" (change)="updateFilterValue('open')"><label for="filter-open">Open</label>
+    <input type="radio" name="filter" id="filter-closed" value="closed" (change)="updateFilterValue('closed')"><label for="filter-closed">Closed</label>
   </div>
   <div class="todos-container">
-    <ng-container *ngIf="(todos$ | async) | toDoFilter:filterValue  as filteredToDos">
+    <ng-container *ngIf="(filteredTodos$ | async) as filteredToDos">
       <div *ngIf="filteredToDos.length == 0" class="no-todos">
         No ToDos
       </div>
       <div class="todo" *ngFor="let todo of filteredToDos; let i = index; trackBy: trackByToDoFn">
         <span class="todo-title">{{i+1}}.
-          <input type="checkbox" (click)="changeStatus(todo.id)" [checked]="getStatus(todo.status)"/> {{todo.name | titlecase}} - {{todo.endDate | date}}</span>
+          <input type="checkbox" (click)="changeStatus(todo)" [checked]="getStatus(todo.status)"/> {{todo.name | titlecase}} - {{todo.endDate | date}}</span>
         <span class="todo-sub-title">Associated people:</span>
         <div class="person-container" *ngFor="let person of todo.persons; let j = index; trackBy: trackByPersonFn">
           <span class="person-name">- {{person.name}} ({{person.age}})</span>

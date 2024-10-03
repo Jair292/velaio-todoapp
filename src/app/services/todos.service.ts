@@ -8,8 +8,8 @@ import { faker } from '@faker-js/faker';
   providedIn: 'root'
 })
 export class ToDosService {
-
   #http = inject(HttpClient);
+
   #todos = new BehaviorSubject<ToDo[]>([]);
   todos$: Observable<ToDo[]> = this.#todos.asObservable();
   #skills = new BehaviorSubject<string[]>([]);
@@ -17,17 +17,13 @@ export class ToDosService {
 
   requestToDos() {
     this.#http.get<ToDo[]>('/api/todos').pipe(
-      tap(data => {
-        this.#todos.next(data);
-      })
+      tap(todos => this.#todos.next(todos))
     ).subscribe();
   }
 
   requestSkills() {
     this.#http.get<string[]>('/api/skills').pipe(
-      tap(data => {
-        this.#skills.next(data);
-      })
+      tap(skills => this.#skills.next(skills))
     ).subscribe();
   }
 
@@ -43,28 +39,15 @@ export class ToDosService {
       endDate: todo.endDate,
       status: 'open'
     };
-
     this.#todos.next([...this.#todos.value, newToDo]);
+
+    return this.#http.post('/api/todos', newToDo);
   }
 
-  updateToDo(id: number, config: { prop: keyof ToDo, value?: any } = { prop: 'status' }) {
-    const updatedTodos: ToDo[] = this.#todos.value.map((todo: ToDo) => {
-      if (todo.id === id) {
-        if (config.prop === 'status') {
-          const status = todo.status === 'open' ? 'closed' : 'open';
-          return {
-            ...todo,
-            status
-          };
-        }
-        return {
-          ...todo,
-          [config.prop]: config.value
-        };
-      }
-      return todo;
-    });
+  updateToDo(todo: ToDo, config: { prop: keyof ToDo, value?: any } = { prop: 'status' }) {
+    const updatedTodo = { ...todo, [config.prop]: config.value };
+    this.#todos.next(this.#todos.value.map(t => t.id === todo.id ? updatedTodo : t));
 
-    this.#todos.next(updatedTodos);
+    return this.#http.put(`/api/todos/${todo.id}`, updatedTodo);
   }
 }

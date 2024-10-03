@@ -1,10 +1,10 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Validators } from '@angular/forms';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { AbstractControl, FormArray, Validators } from '@angular/forms';
 import { CustomValidators } from 'src/app/from-validators/validators';
-import { commonImports, FieldsArrayForm, viewProviders } from 'src/app/directives/fields-array-form.directive';
+import { commonImports, FormFields, viewProviders } from 'src/app/directives/form-fields.directive';
 import { SkillsComponent } from '../skills/skills.component';
 import { ButtonDirective } from 'src/app/directives/button.directive';
-import { Subject, takeUntil, tap } from 'rxjs';
+import { trackByFn } from 'src/app/helpers/common';
 
 @Component({
   selector: 'app-persons',
@@ -14,10 +14,9 @@ import { Subject, takeUntil, tap } from 'rxjs';
   styleUrls: ['./persons.component.scss'],
   viewProviders: [...viewProviders],
 })
-export class PersonsComponent extends FieldsArrayForm implements OnInit, OnDestroy {
-
-  persons = this.fb.nonNullable.array([this.createPersonGroup()], [CustomValidators.notDuplicates()]);
-  destroy$ = new Subject<boolean>();
+export class PersonsComponent extends FormFields implements OnInit {
+  persons = this.createPersons();
+  trackByFn = trackByFn;
 
   ngOnInit(): void {
     if (!this.formArray) {
@@ -25,26 +24,16 @@ export class PersonsComponent extends FieldsArrayForm implements OnInit, OnDestr
     } else {
       this.persons = this.formArray;
     }
-
-    this.persons.valueChanges.pipe(
-      tap(values => {
-        if (!values.length) {
-          this.addPerson();
-        }
-      }),
-      takeUntil(this.destroy$)
-    ).subscribe();
   }
 
-  ngOnDestroy(): void {
-    this.parentFormGroup?.removeControl(this.formArrayName);
-    this.destroy$.next(true);
+  createPersons() {
+    return this.fb.nonNullable.array([this.createPersonGroup()], [CustomValidators.notDuplicates()]);
   }
 
   createPersonGroup() {
     return this.fb.nonNullable.group({
       name: ['', [ Validators.required, Validators.minLength(5)]],
-      age: ['', [Validators.required, Validators.min(19)]],
+      age: ['', [Validators.required, Validators.min(19)]]
     })
   }
 

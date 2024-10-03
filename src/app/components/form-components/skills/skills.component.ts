@@ -1,10 +1,11 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
-import { commonImports, FieldsArrayForm, viewProviders } from 'src/app/directives/fields-array-form.directive';
+import { commonImports, FormFields, viewProviders } from 'src/app/directives/form-fields.directive';
 import { CustomValidators } from 'src/app/from-validators/validators';
 import { ButtonDirective } from 'src/app/directives/button.directive';
 import { ToDosService } from 'src/app/services/todos.service';
 import { trackByFn } from 'src/app/helpers/common';
+import { takeUntil, tap } from 'rxjs';
 
 @Component({
   selector: 'app-skills',
@@ -15,13 +16,12 @@ import { trackByFn } from 'src/app/helpers/common';
   changeDetection: ChangeDetectionStrategy.OnPush,
   viewProviders: [...viewProviders]
 })
-export class SkillsComponent extends FieldsArrayForm {
-  toDoService = inject(ToDosService);
-  skillList$ = this.toDoService.skills$;
-
-  skills = this.fb.nonNullable.array<FormControl<string>>(
-    [this.createSkillControl()], [Validators.minLength(1), CustomValidators.notDuplicates()]);
+export class SkillsComponent extends FormFields {
+  skillList$ = inject(ToDosService).skills$;
+  skills = this.createSkills();
   trackByFn = trackByFn;
+
+  changeObserver$ = this.skills.valueChanges;
 
   ngOnInit(): void {
     if (!this.formArray) {
@@ -29,10 +29,17 @@ export class SkillsComponent extends FieldsArrayForm {
     } else {
       this.skills = this.formArray;
     }
+
+    this.formSubmited$.pipe(
+      tap(() => this.skills.controls.forEach(control => control.reset())),
+      tap(() => this.cdr.markForCheck()),
+      takeUntil(this.destroy$)
+    ).subscribe();
   }
 
-  ngOnDestroy(): void {
-    this.parentFormGroup?.removeControl(this.formArrayName);
+  createSkills() {
+    return this.fb.nonNullable.array<FormControl<string>>(
+      [this.createSkillControl()], [Validators.minLength(1), CustomValidators.notDuplicates()]);
   }
 
   createSkillControl() {

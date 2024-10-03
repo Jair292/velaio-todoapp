@@ -1,10 +1,11 @@
 import { ChangeDetectionStrategy, Component, inject, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormArray, FormBuilder, FormGroupDirective, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormBuilder, FormGroupDirective, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ButtonDirective } from 'src/app/directives/button.directive';
 import { ToDosService } from 'src/app/services/todos.service';
-import { ToDo } from 'src/app/models/todo';
 import { PersonsComponent } from '../form-components/persons/persons.component';
+import { FORM_TOKEN } from 'src/app/helpers/common';
+import { Subject } from 'rxjs';
 
 @Component({
   selector: 'app-todo-form',
@@ -12,32 +13,34 @@ import { PersonsComponent } from '../form-components/persons/persons.component';
   imports: [CommonModule, ReactiveFormsModule, PersonsComponent, ButtonDirective],
   templateUrl: './todo-form.component.html',
   styleUrls: ['./todo-form.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  providers: [
+    { provide: FORM_TOKEN, useExisting: TodoFormComponent },
+  ],
 })
 export class TodoFormComponent {
   fb = inject(FormBuilder);
   toDosService = inject(ToDosService);
+  submitedTrigger$ = new Subject<void>();
 
   @ViewChild(FormGroupDirective) formDir!: FormGroupDirective;
 
-  todoForm = this.fb.nonNullable.group({
-    name: ['', [ Validators.required, Validators.minLength(5) ]],
-    endDate: ['', Validators.required],
-  });
+  todoForm = this.createForm();
 
-  onSubmit() {
-    if (this.todoForm.invalid) {
-      return;
-    }
-    this.toDosService.addToDo(this.todoForm.value as Partial<ToDo>);
-    this.personArrayUpdate();
-    this.formDir.resetForm();
+  createForm() {
+    return this.fb.nonNullable.group({
+      name: ['', [ Validators.required, Validators.minLength(5) ]],
+      endDate: ['', Validators.required],
+    });
   }
 
-  personArrayUpdate() {
-    const persons = this.todoForm.get('persons');
-    if (persons instanceof FormArray) {
-      persons.clear();
-    }
+  onSubmit() {
+    // if (this.todoForm.invalid) {
+    //   return;
+    // }
+    console.log('1',this.todoForm.value);
+    this.submitedTrigger$.next();
+    this.formDir.resetForm();
+    console.log('2',this.todoForm.value);
   }
 }

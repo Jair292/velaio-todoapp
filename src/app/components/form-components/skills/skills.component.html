@@ -1,11 +1,11 @@
 <fieldset>
   <legend>{{legend}}</legend>
   <div class="fields" [formArrayName]="formArrayName">
-    <ng-container *ngFor="let skill of skills.controls; let i = index; trackBy: trackByFn">
+    <ng-container *ngFor="let skill of skills.controls; trackBy: trackByFn; let i = index;">
       <div class="content">
         <div class="list">
           <div class="field">
-            <input type="text" [formControlName]="i" id="skill-{{i}}" list="skills">
+            <input type="text" [formControlName]="i" list="skills">
           </div>
         </div>
         <div class="field-actions">

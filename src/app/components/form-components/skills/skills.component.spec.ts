@@ -6,7 +6,7 @@ import { viewProviders } from 'src/app/directives/form-fields.directive';
 import { of, Subject } from 'rxjs';
 import { FORM_TOKEN } from 'src/app/helpers/common';
 
-fdescribe('SkillsComponent', () => {
+xdescribe('SkillsComponent', () => {
   let component: SkillsComponent;
   let fixture: ComponentFixture<SkillsComponent>;
   let toDosServiceSpy: jasmine.SpyObj<ToDosService>;

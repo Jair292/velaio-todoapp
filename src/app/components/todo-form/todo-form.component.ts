@@ -6,6 +6,7 @@ import { ToDosService } from 'src/app/services/todos.service';
 import { PersonsComponent } from '../form-components/persons/persons.component';
 import { FORM_TOKEN } from 'src/app/helpers/common';
 import { Subject } from 'rxjs';
+import { ToDo } from 'src/app/models/todo';
 
 @Component({
   selector: 'app-todo-form',
@@ -38,6 +39,7 @@ export class TodoFormComponent {
     if (this.todoForm.invalid) {
       return;
     }
+    this.toDosService.addToDo(this.todoForm.value as Partial<ToDo>);
     this.submitedTrigger$.next();
     this.formDir.resetForm();
   }

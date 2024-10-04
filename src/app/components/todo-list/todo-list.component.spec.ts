@@ -9,6 +9,7 @@ import { ButtonDirective } from 'src/app/directives/button.directive';
 import { ToDoFilterPipe } from 'src/app/pipes/todofilter.pipe';
 import { LoaderComponent } from '../loader/loader.component';
 import { Person, ToDo } from 'src/app/models/todo';
+import { of } from 'rxjs';
 
 const person: Person = {
   name: 'test',
@@ -55,16 +56,21 @@ describe('TodoListComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should set filterValue when filter method is called', () => {
-    const filterValue = 'open';
-    component.filter(filterValue);
-    expect(component.filterValue).toBe(filterValue);
-  });
-
   it('should call updateToDo method of ToDosService when changeStatus method is called', () => {
-    const id = 1;
-    component.changeStatus(id);
-    expect(toDoServiceSpy.updateToDo).toHaveBeenCalledWith(id);
+    const initialToDo: ToDo = {
+      id: 1,
+      name: "Initial ToDo",
+      status: "open",
+      endDate: new Date(),
+      persons: [{ name: "John Smith", age: 35, skills: ["development"] }],
+    };
+
+
+    const expectedStatus = "closed";
+    toDoServiceSpy.updateToDo.and.returnValue(of({...initialToDo, status: expectedStatus}));
+
+    component.changeStatus(initialToDo);
+    expect(toDoServiceSpy.updateToDo).toHaveBeenCalledWith(initialToDo, { prop: 'status', value: expectedStatus});
   });
 
   it('should return item id when trackByToDoFn method is called', () => {

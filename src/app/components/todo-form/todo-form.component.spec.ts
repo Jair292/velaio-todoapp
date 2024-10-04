@@ -42,9 +42,7 @@ describe('TodoFormComponent', () => {
 
   it('should create a ToDo', () => {
     component.todoForm.patchValue(formValues);
-    console.log(component.todoForm.valid);
     component.onSubmit();
-
     expect(toDoServiceSpy.addToDo).toHaveBeenCalled();
   });
 });

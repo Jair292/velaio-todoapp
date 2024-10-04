@@ -88,14 +88,13 @@ describe('ToDosService', () => {
       status: "open",
     };
 
-
     service.addToDo(initialToDo);
 
     service.todos$.pipe(skip(2)).subscribe(todos => {
       expect(todos[0].status).toBe('closed');
     });
 
-    service.updateToDo(1);
+    service.updateToDo(initialToDo, { prop: 'status', value: 'closed' });
   });
 
   it('should update a property of a ToDo when updateToDo is called with a specific property', () => {
@@ -110,10 +109,18 @@ describe('ToDosService', () => {
     service.addToDo(initialToDo);
 
     service.todos$.pipe(skip(2)).subscribe(todos => {
-      debugger
       expect(todos[0].name).toBe('Updated ToDo');
     });
 
-    service.updateToDo(1, { prop: 'name', value: 'Updated ToDo' });
+    service.updateToDo(
+      {
+        id: 1,
+        name: "Initial ToDo",
+        status: "open",
+        endDate: new Date(),
+        persons: [{ name: "John Smith", age: 35, skills: ["development"] }],
+      },
+      { prop: "name", value: "Updated ToDo" }
+    );
   });
 });

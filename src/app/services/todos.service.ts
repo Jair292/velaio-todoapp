@@ -21,7 +21,6 @@ export class ToDosService {
   #skills = new BehaviorSubject<string[]>([]);
   skills$: Observable<string[]> = this.#skills.asObservable();
   loadingToDos$ = new BehaviorSubject<boolean>(true);
-  updateingToDos$ = new BehaviorSubject<boolean>(false);
   totalPages$ = new BehaviorSubject<number>(0);
 
   requestToDos(status: requestToDoStatus = 'all', page: number, pageSize: number = 10) {
@@ -35,6 +34,7 @@ export class ToDosService {
     );
   }
 
+  // TODO: move to a separate service
   requestSkills() {
     return this.#http.get<string[]>('/api/skills').pipe(
       tap(skills => this.#skills.next(skills))

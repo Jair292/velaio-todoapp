@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { TodoFormComponent } from './todo-form.component';
 import { ToDosService } from 'src/app/services/todos.service';
-import { FormGroupDirective, ReactiveFormsModule } from '@angular/forms';
+import { FormGroup, FormGroupDirective, ReactiveFormsModule } from '@angular/forms';
 import { Person } from 'src/app/models/todo';
 import { PersonsComponent } from '../form-components/persons/persons.component';
 import { SkillsComponent } from '../form-components/skills/skills.component';
@@ -52,6 +52,10 @@ describe('TodoFormComponent', () => {
     expect(component).toBeTruthy();
     expect(toDoServiceSpy.requestSkills).toHaveBeenCalled();
   });
+
+  it('should return the form initial structure', () => {
+    expect(component.createForm()).toBeInstanceOf(FormGroup);
+  })
 
   it('should submit when form is valid', () => {
     toDoServiceSpy.addToDo.and.returnValue(of({status: 200}));

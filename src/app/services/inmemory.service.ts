@@ -39,10 +39,10 @@ export class InmemoryService implements InMemoryDbService {
 
   createDb(): {} | Observable<{}> | Promise<{}> {
     const todos: ToDo[] = [
-      ...Array.from({length: 5}, (_, i) => {
+      ...Array.from({length: 100}, (_, i) => {
         return {
           id: this.generateRandomId(),
-          name: faker.helpers.arrayElement(todoNames),
+          name: `${faker.helpers.arrayElement(todoNames)}-${i}`,
           endDate: faker.date.recent(),
           status: faker.helpers.arrayElement(['open', 'closed']),
           persons: [
@@ -71,6 +71,14 @@ export class InmemoryService implements InMemoryDbService {
     const collectionName = requestInfo.collectionName;
 
     if (collectionName === 'todos') {
+      const page = +requestInfo.query.get('page')[0];
+      const pageSize = requestInfo.query.get('pageSize') ? requestInfo.query.get('pageSize')[0] : 10;
+
+      // Remove page and pageSize from query parameters so they're not considered as filtering parameters for the
+      // collection later on.
+      requestInfo.query.delete('page');
+      requestInfo.query.delete('pageSize');
+
       const statusFilter = requestInfo.query.get('status');
       const status = statusFilter[0];
       let data = requestInfo.collection;
@@ -81,8 +89,24 @@ export class InmemoryService implements InMemoryDbService {
         }
       }
 
+      const pagesCount = Math.ceil(data.length / pageSize);
+
+      if (page > pagesCount) {
+        data = [];
+      } else {
+        data = data.slice((page - 1) * pageSize, page * pageSize);
+      }
+
       const options: ResponseOptions = {
-        body: data,
+        body: {
+          data,
+          pagination: {
+            page,
+            pageSize,
+            pagesCount,
+          },
+          status: STATUS.OK
+        },
         status: STATUS.OK,
         headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
       };
@@ -108,6 +132,9 @@ export class InmemoryService implements InMemoryDbService {
       collection.push(item);
 
       const options: ResponseOptions = {
+        body: {
+          status: STATUS.OK
+        },
         status: STATUS.OK
       };
 
@@ -137,6 +164,9 @@ export class InmemoryService implements InMemoryDbService {
       })
 
       const options: ResponseOptions = {
+        body: {
+          status: status
+        },
         status: status
       };
 

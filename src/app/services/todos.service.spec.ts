@@ -31,11 +31,15 @@ describe('ToDosService', () => {
       { id: 1, name: 'Test ToDo', status: 'open', endDate: new Date(), persons: [{ name: 'John Doe', age: 30, skills: ['coding'] }] }
     ];
 
-    service.requestToDos().subscribe();
+    service.requestToDos('all', 1, 10).subscribe();
 
-    const req = httpMock.expectOne('/api/todos?status=all');
+    const req = httpMock.expectOne(`/api/todos?status=all&page=1&pageSize=10`);
     expect(req.request.method).toBe('GET');
-    req.flush(mockToDos);
+    req.flush({
+      data: mockToDos,
+      status: 200,
+      pagination: { page: 1, pageSize: 10, pagesCount: 1 }
+    });
 
     service.todos$.subscribe(todos => {
       expect(todos.length).toBe(1);

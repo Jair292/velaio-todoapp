@@ -1,5 +1,4 @@
-import { Component, inject } from '@angular/core';
-import { ToDosService } from './services/todos.service';
+import { Component } from '@angular/core';
 
 @Component({
   selector: 'app-root',
@@ -7,10 +6,4 @@ import { ToDosService } from './services/todos.service';
   styleUrls: ['./app.component.scss'],
 })
 export class AppComponent {
-  toDoService = inject(ToDosService);
-
-  ngOnInit() {
-    this.toDoService.requestToDos().subscribe();
-    this.toDoService.requestSkills().subscribe();
-  }
 }

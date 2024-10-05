@@ -1,10 +1,12 @@
 <h1>ToDo List</h1>
 <ng-container *ngIf="!(loadingToDos$ | async); else loading">
   <div class="actions">
-    <span>Filter:</span>
-    <input type="radio" name="filter" id="filter-all" [value]="undefined" checked (change)="updateFilterValue(undefined)"><label for="filter-all">All</label>
-    <input type="radio" name="filter" id="filter-open" value="open" (change)="updateFilterValue('open')"><label for="filter-open">Open</label>
-    <input type="radio" name="filter" id="filter-closed" value="closed" (change)="updateFilterValue('closed')"><label for="filter-closed">Closed</label>
+    <div class="filter">
+      <span>Filter:</span>
+      <input type="radio" name="filter" id="filter-all" [value]="undefined" checked (change)="updateFilterValue(undefined)"><label for="filter-all">All</label>
+      <input type="radio" name="filter" id="filter-open" value="open" (change)="updateFilterValue('open')"><label for="filter-open">Open</label>
+      <input type="radio" name="filter" id="filter-closed" value="closed" (change)="updateFilterValue('closed')"><label for="filter-closed">Closed</label>
+    </div>
   </div>
   <div class="todos-container" [class.disabled]="(updatingToDo$ | async) || (filteringToDos$ | async)">
     <ng-container *ngIf="(todos$ | async) as ToDos;">
@@ -12,7 +14,7 @@
         No ToDos
       </div>
       <div class="todo" *ngFor="let todo of ToDos; let i = index; trackBy: trackByFn">
-        <span class="todo-title">{{i+1}}.
+        <span class="todo-title">{{i+1+((page$.value-1)*10)}}.
           <input type="checkbox" (click)="changeStatus(todo)" [checked]="getStatus(todo.status)"/> {{todo.name | titlecase}} - {{todo.endDate | date}}</span>
         <span class="todo-sub-title">Associated people:</span>
         <div class="person-container" *ngFor="let person of todo.persons; let j = index; trackBy: trackByFn">
@@ -25,6 +27,9 @@
         </div>
       </div>
     </ng-container>
+  </div>
+  <div class="pagination">
+    <app-paginator [page]="(page$ |async) || 0" [totalPages]="(totalPages$ | async) || 0" (pageChanged)="changePage($event)"></app-paginator>
   </div>
 </ng-container>
 

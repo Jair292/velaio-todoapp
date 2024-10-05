@@ -65,7 +65,7 @@ describe('TodoListComponent', () => {
     };
 
     const expectedStatus = "closed";
-    toDoServiceSpy.updateToDo.and.returnValue(of({...initialToDo, status: expectedStatus}));
+    toDoServiceSpy.updateToDo.and.returnValue(of({status: 200}));
 
     component.changeStatus(initialToDo);
     expect(toDoServiceSpy.updateToDo).toHaveBeenCalledWith(initialToDo, { prop: 'status', value: expectedStatus});
@@ -98,4 +98,15 @@ describe('TodoListComponent', () => {
     const result = component.getStatus(status);
     expect(result).toBeTrue();
   });
+
+  it('should change the page', () => {
+    const page = 2;
+    component.changePage(page);
+    expect(component.page$.value).toBe(page);
+  });
+
+  it('should return value of status as boolean', ()=> {
+    const result = component.getStatus('open');
+    expect(result).toBeFalse();
+  })
 });

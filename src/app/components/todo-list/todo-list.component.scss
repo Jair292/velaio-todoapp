@@ -1,9 +1,10 @@
-@import '../../styles/variables.scss';
+@use '../../styles/variables.scss' as variables;
+@use '../../styles/button.scss' as button;
 
 @mixin baseLayout() {
   display: flex;
   flex-flow: column;
-  padding: $padding;
+  padding: variables.$padding;
 }
 
 :host {
@@ -20,21 +21,21 @@
   .actions {
     display: flex;
     justify-content: flex-start;
-    padding: $padding;
-    border: $border-color 1px solid;
-    border-radius: $border-radius;
-    margin-bottom: $margin;
+    padding: variables.$padding;
+    border: variables.$border-color 1px solid;
+    border-radius: variables.$border-radius;
+    margin-bottom: variables.$margin;
     overflow: scroll;
 
     span, label {
-      margin-right: $margin;
+      margin-right: variables.$margin;
     }
   }
 
   .todos-container {
     position: relative;
-    border: $border-color 1px solid;
-    border-radius: $border-radius;
+    border: variables.$border-color 1px solid;
+    border-radius: variables.$border-radius;
 
     &.disabled {
       pointer-events: none;
@@ -42,28 +43,28 @@
     }
 
     .no-todos {
-      font-size: $font-size-small;
+      font-size: variables.$font-size-small;
     }
 
     .todo {
-      padding: $padding;
+      padding: variables.$padding;
       &:not(:last-child) {
-        border-bottom: $border-color 1px solid;
+        border-bottom: variables.$border-color 1px solid;
       }
 
       .todo-title {
         font-weight: bold;
-        font-size: $font-size-medium;
-        padding-bottom: $padding;
+        font-size: variables.$font-size-medium;
+        padding-bottom: variables.$padding;
       }
       .todo-sub-title {
-        font-size: $font-size-small;
-        padding-bottom: $padding;
+        font-size: variables.$font-size-small;
+        padding-bottom: variables.$padding;
       }
 
       .person-name, .person-skills {
-        padding: $padding;
-        font-size: $font-size-small;
+        padding: variables.$padding;
+        font-size: variables.$font-size-small;
       }
 
       .person-container {

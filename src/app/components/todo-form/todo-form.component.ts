@@ -28,6 +28,10 @@ export class TodoFormComponent {
 
   todoForm = this.createForm();
 
+  ngOnInit() {
+    this.toDosService.requestSkills().subscribe();
+  }
+
   createForm() {
     return this.fb.nonNullable.group({
       name: ['', [ Validators.required, Validators.minLength(5) ]],

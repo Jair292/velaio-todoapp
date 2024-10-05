@@ -27,7 +27,7 @@ describe('TodoFormComponent', () => {
   let submitedTriggerSpy: jasmine.SpyObj<Subject<void>>;
 
   beforeEach(() => {
-    toDoServiceSpy = jasmine.createSpyObj('ToDosService', ['addToDo']);
+    toDoServiceSpy = jasmine.createSpyObj('ToDosService', ['addToDo', 'requestSkills']);
     mockFormGroupDirective = jasmine.createSpyObj('FormGroupDirective', ['resetForm', 'form']);
     mockFormGroupDirective.form = { reset: jasmine.createSpy('reset') } as any;
     submitedTriggerSpy = jasmine.createSpyObj('Subject', ['next']);
@@ -44,15 +44,17 @@ describe('TodoFormComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(TodoFormComponent);
     component = fixture.componentInstance;
+    toDoServiceSpy.requestSkills.and.returnValue(of(['Skill 1', 'Skill 2']));
     fixture.detectChanges();
   });
 
   it('should create', () => {
     expect(component).toBeTruthy();
+    expect(toDoServiceSpy.requestSkills).toHaveBeenCalled();
   });
 
   it('should submit when form is valid', () => {
-    toDoServiceSpy.addToDo.and.returnValue(of({}));
+    toDoServiceSpy.addToDo.and.returnValue(of({status: 200}));
     component.todoForm.patchValue(formValues);
     component.onSubmit();
 

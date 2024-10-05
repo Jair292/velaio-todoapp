@@ -36,14 +36,4 @@ describe('AppComponent', () => {
   it('should create the app component', () => {
     expect(component).toBeTruthy();
   });
-
-  it('should call requestToDos and requestSkills on init', () => {
-    toDoServiceSpy.requestToDos.and.returnValue(of([]));
-    toDoServiceSpy.requestSkills.and.returnValue(of([]));
-
-    component.ngOnInit();
-
-    expect(toDoServiceSpy.requestToDos).toHaveBeenCalled();
-    expect(toDoServiceSpy.requestSkills).toHaveBeenCalled();
-  });
 });

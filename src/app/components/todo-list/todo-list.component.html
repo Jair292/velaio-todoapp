@@ -1,24 +1,24 @@
 <h1>ToDo List</h1>
-<ng-container *ngIf="(todos$ | async)?.length; else noTodos">
+<ng-container *ngIf="!(loadingToDos$ | async); else loading">
   <div class="actions">
     <span>Filter:</span>
     <input type="radio" name="filter" id="filter-all" [value]="undefined" checked (change)="updateFilterValue(undefined)"><label for="filter-all">All</label>
     <input type="radio" name="filter" id="filter-open" value="open" (change)="updateFilterValue('open')"><label for="filter-open">Open</label>
     <input type="radio" name="filter" id="filter-closed" value="closed" (change)="updateFilterValue('closed')"><label for="filter-closed">Closed</label>
   </div>
-  <div class="todos-container">
-    <ng-container *ngIf="(filteredTodos$ | async) as filteredToDos">
-      <div *ngIf="filteredToDos.length == 0" class="no-todos">
+  <div class="todos-container" [class.disabled]="(updatingToDo$ | async) || (filteringToDos$ | async)">
+    <ng-container *ngIf="(todos$ | async) as ToDos;">
+      <div *ngIf="ToDos.length == 0" class="no-todos">
         No ToDos
       </div>
-      <div class="todo" *ngFor="let todo of filteredToDos; let i = index; trackBy: trackByToDoFn">
+      <div class="todo" *ngFor="let todo of ToDos; let i = index; trackBy: trackByFn">
         <span class="todo-title">{{i+1}}.
           <input type="checkbox" (click)="changeStatus(todo)" [checked]="getStatus(todo.status)"/> {{todo.name | titlecase}} - {{todo.endDate | date}}</span>
         <span class="todo-sub-title">Associated people:</span>
-        <div class="person-container" *ngFor="let person of todo.persons; let j = index; trackBy: trackByPersonFn">
+        <div class="person-container" *ngFor="let person of todo.persons; let j = index; trackBy: trackByFn">
           <span class="person-name">- {{person.name}} ({{person.age}})</span>
           <span class="person-skills">
-            Skills: <ng-container *ngFor="let skill of person.skills; let k = index; trackBy: trackBySkillFn">
+            Skills: <ng-container *ngFor="let skill of person.skills; let k = index; trackBy: trackByFn">
               {{skill}}
             </ng-container>
           </span>
@@ -28,6 +28,6 @@
   </div>
 </ng-container>
 
-<ng-template #noTodos>
+<ng-template #loading>
   <app-loader></app-loader>
 </ng-template>

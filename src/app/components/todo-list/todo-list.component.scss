@@ -12,6 +12,7 @@
   width: 100%;
   justify-content: center;
   flex-grow: 1;
+
   .todos-container, .todo {
     @include baseLayout();
   }
@@ -31,8 +32,14 @@
   }
 
   .todos-container {
+    position: relative;
     border: $border-color 1px solid;
     border-radius: $border-radius;
+
+    &.disabled {
+      pointer-events: none;
+      opacity: 0.6;
+    }
 
     .no-todos {
       font-size: $font-size-small;

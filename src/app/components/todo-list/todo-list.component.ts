@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject} from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, OnDestroy, OnInit} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Person, ToDo } from 'src/app/models/todo';
 import { LoaderComponent } from '../loader/loader.component';
@@ -6,7 +6,7 @@ import { ToDoFilterPipe } from 'src/app/pipes/todofilter.pipe';
 import { ToDosService } from 'src/app/services/todos.service';
 import { ButtonDirective } from 'src/app/directives/button.directive';
 import { FormsModule } from '@angular/forms';
-import { BehaviorSubject, combineLatest, map, tap } from 'rxjs';
+import { BehaviorSubject, finalize, startWith, Subject, switchMap, takeUntil, tap } from 'rxjs';
 
 @Component({
   selector: "app-todo-list",
@@ -22,26 +22,31 @@ import { BehaviorSubject, combineLatest, map, tap } from 'rxjs';
   styleUrls: ["./todo-list.component.scss"],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class TodoListComponent {
+export class TodoListComponent implements OnInit, OnDestroy {
   toDoService = inject(ToDosService);
   cd = inject(ChangeDetectorRef);
+  destroy$ = new Subject<void>();
 
   filterValue$ = new BehaviorSubject<ToDo["status"] | undefined>(undefined);
-  refreshTrigger$ = new BehaviorSubject<void>(undefined);
-
+  updatingToDo$ = new BehaviorSubject<boolean>(false);
   todos$ = this.toDoService.todos$;
+  loadingToDos$ = this.toDoService.loadingToDos$;
+  filteringToDos$ = new BehaviorSubject<boolean>(false);
 
-  filteredTodos$ = combineLatest([this.todos$, this.filterValue$]).pipe(
-    map(([todos, filterValue]) => this.filterData(todos, filterValue))
-  );
+  ngOnInit() {
+    this.filterValue$.pipe(
+      switchMap(filterValue =>
+        this.toDoService.requestToDos(filterValue).pipe(
+          startWith(null),
+          finalize(() => this.filteringToDos$.next(false))
+        )
+      ),
+      takeUntil(this.destroy$),
+    ).subscribe(() => this.filteringToDos$.next(true));
+  }
 
-  filterData(data: ToDo[], filterValue: ToDo["status"] | undefined) {
-    return data.filter((todo) => {
-      if (!filterValue) {
-        return true;
-      }
-      return todo.status == filterValue;
-    });
+  ngOnDestroy() {
+    this.destroy$.next();
   }
 
   getStatus(status: ToDo["status"]): boolean {
@@ -55,19 +60,22 @@ export class TodoListComponent {
   changeStatus(toDo: ToDo) {
     const status = toDo.status == "open" ? "closed" : "open";
     this.toDoService.updateToDo(toDo, { prop: "status", value: status }).pipe(
-      tap(() => this.refreshTrigger$.next())
+      tap(() => this.filterValue$.next(this.filterValue$.value)),
+      finalize(() => this.updatingToDo$.next(false)),
     ).subscribe();
+
+    this.updatingToDo$.next(true);
   }
 
-  trackByToDoFn(index: number, item: ToDo): number | string {
-    return item.id;
-  }
+  trackByFn(index: number, item: ToDo | Person | string): number | string {
+    if (typeof item === 'string') {
+      return item;
+    } else if ('id' in item) {
+      return item.id;
+    } else if ('name' in item) {
+      return item.name;
+    }
 
-  trackByPersonFn(index: number, item: Person) {
-    return item.name;
-  }
-
-  trackBySkillFn(index: number, item: string) {
-    return item;
+    return index;
   }
 }

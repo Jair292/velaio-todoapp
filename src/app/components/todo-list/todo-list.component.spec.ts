@@ -1,4 +1,3 @@
-// todo-list.component.spec.ts
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { TodoListComponent } from './todo-list.component';
 import { ToDosService } from 'src/app/services/todos.service';
@@ -65,7 +64,6 @@ describe('TodoListComponent', () => {
       persons: [{ name: "John Smith", age: 35, skills: ["development"] }],
     };
 
-
     const expectedStatus = "closed";
     toDoServiceSpy.updateToDo.and.returnValue(of({...initialToDo, status: expectedStatus}));
 
@@ -73,19 +71,19 @@ describe('TodoListComponent', () => {
     expect(toDoServiceSpy.updateToDo).toHaveBeenCalledWith(initialToDo, { prop: 'status', value: expectedStatus});
   });
 
-  it('should return item id when trackByToDoFn method is called', () => {
-    const result = component.trackByToDoFn(0, toDo);
+  it('should return item id when trackByFn method is called with ToDo', () => {
+    const result = component.trackByFn(0, toDo);
     expect(result).toBe(toDo.id);
   });
 
-  it('should return item name when trackByPersonFn method is called', () => {
-    const result = component.trackByPersonFn(0, person);
+  it('should return item name when trackByFn method is called with Person', () => {
+    const result = component.trackByFn(0, person);
     expect(result).toBe(person.name);
   });
 
-  it('should return item when trackBySkillFn method is called', () => {
+  it('should return item when trackBy method is called with string', () => {
     const item = 'Angular';
-    const result = component.trackBySkillFn(0, item);
+    const result = component.trackByFn(0, item);
     expect(result).toBe(item);
   });
 

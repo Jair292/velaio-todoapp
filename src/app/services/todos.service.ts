@@ -1,8 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { ToDo } from '../models/todo';
-import { BehaviorSubject, Observable, tap } from 'rxjs';
-import { faker } from '@faker-js/faker';
+import { BehaviorSubject, finalize, Observable, tap } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -14,17 +13,20 @@ export class ToDosService {
   todos$: Observable<ToDo[]> = this.#todos.asObservable();
   #skills = new BehaviorSubject<string[]>([]);
   skills$: Observable<string[]> = this.#skills.asObservable();
+  loadingToDos$ = new BehaviorSubject<boolean>(true);
+  updateingToDos$ = new BehaviorSubject<boolean>(false);
 
-  requestToDos() {
-    this.#http.get<ToDo[]>('/api/todos').pipe(
-      tap(todos => this.#todos.next(todos))
-    ).subscribe();
+  requestToDos(status: ToDo['status'] | 'all' = 'all') {
+    return this.#http.get<ToDo[]>(`/api/todos?status=${status}`).pipe(
+      tap(todos => this.#todos.next(todos)),
+      finalize(() => this.loadingToDos$.next(false))
+    );
   }
 
   requestSkills() {
-    this.#http.get<string[]>('/api/skills').pipe(
+    return this.#http.get<string[]>('/api/skills').pipe(
       tap(skills => this.#skills.next(skills))
-    ).subscribe();
+    );
   }
 
   addToDo(todo: Partial<ToDo>) {
@@ -32,21 +34,18 @@ export class ToDosService {
       throw new Error('Missing required properties to create a new ToDo');
     }
 
-    const newToDo: ToDo = {
-      id: faker.number.int({min: 10, max: 100}),
+    const newToDo: Partial<ToDo> = {
       name: todo.name,
       persons: todo.persons,
       endDate: todo.endDate,
       status: 'open'
     };
-    this.#todos.next([...this.#todos.value, newToDo]);
 
     return this.#http.post('/api/todos', newToDo);
   }
 
-  updateToDo(todo: ToDo, config: { prop: keyof ToDo, value?: any } = { prop: 'status' }) {
+  updateToDo(todo: ToDo, config: { prop: keyof ToDo, value: ToDo[keyof ToDo] }) {
     const updatedTodo = { ...todo, [config.prop]: config.value };
-    this.#todos.next(this.#todos.value.map(t => t.id === todo.id ? updatedTodo : t));
 
     return this.#http.put(`/api/todos/${todo.id}`, updatedTodo);
   }

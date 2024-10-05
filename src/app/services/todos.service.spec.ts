@@ -31,9 +31,9 @@ describe('ToDosService', () => {
       { id: 1, name: 'Test ToDo', status: 'open', endDate: new Date(), persons: [{ name: 'John Doe', age: 30, skills: ['coding'] }] }
     ];
 
-    service.requestToDos();
+    service.requestToDos().subscribe();
 
-    const req = httpMock.expectOne('/api/todos');
+    const req = httpMock.expectOne('/api/todos?status=all');
     expect(req.request.method).toBe('GET');
     req.flush(mockToDos);
 
@@ -43,33 +43,30 @@ describe('ToDosService', () => {
     });
   });
 
-  it('should fetch Skills and update #skills BehaviorSubject', () => {
-    const mockSkills: string[] = ['Angular', 'TypeScript'];
+  it('should make an HTTP GET request and update the #skills BehaviorSubject', () => {
+    const mockSkills = ['JavaScript', 'Angular', 'TypeScript'];
 
-    service.requestSkills();
-
+    service.requestSkills().subscribe();
     const req = httpMock.expectOne('/api/skills');
     expect(req.request.method).toBe('GET');
     req.flush(mockSkills);
 
-    service.skills$.subscribe(skills => {
-      expect(skills.length).toBe(2);
+    service.skills$.subscribe((skills) => {
       expect(skills).toEqual(mockSkills);
     });
   });
 
   it('should add a new ToDo', () => {
-    const todo = { name: 'New ToDo', persons: [], endDate: new Date() };
+    const todo: Partial<ToDo> = { name: 'New ToDo', persons: [{ name: 'John Doe', age: 30, skills: ['coding'] }], endDate: new Date() };
 
-    service.todos$.pipe(take(1)).subscribe(todos => {
-      expect(todos.length).toBe(0);
-    });
+    service.addToDo(todo).subscribe();
+    const req = httpMock.expectOne('/api/todos');
+    expect(req.request.method).toBe('POST');
+    req.flush(todo);
 
-    service.addToDo(todo);
-
-    service.todos$.pipe(take(1)).subscribe(todos => {
+    service.todos$.pipe(skip(1)).subscribe(todos => {
       expect(todos.length).toBe(1);
-      expect(todos[0].name).toBe(todo.name);
+      expect(todos[0].name).toBe(todo.name as string);
     });
   });
 

@@ -39,7 +39,7 @@ export class TodoFormComponent {
     if (this.todoForm.invalid) {
       return;
     }
-    this.toDosService.addToDo(this.todoForm.value as Partial<ToDo>);
+    this.toDosService.addToDo(this.todoForm.value as Partial<ToDo>).subscribe();
     this.submitedTrigger$.next();
     this.formDir.resetForm();
   }

@@ -10,7 +10,7 @@ export class AppComponent {
   toDoService = inject(ToDosService);
 
   ngOnInit() {
-    this.toDoService.requestToDos();
-    this.toDoService.requestSkills();
+    this.toDoService.requestToDos().subscribe();
+    this.toDoService.requestSkills().subscribe();
   }
 }

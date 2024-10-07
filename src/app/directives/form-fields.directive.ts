@@ -20,7 +20,7 @@ export class FormFields implements OnDestroy {
   @Input() legend: string = '';
 
   fb = inject(FormBuilder);
-  formSubmited$= inject(FORM_TOKEN).submitedTrigger$;
+  formSubmited$= inject(FORM_TOKEN, {optional: true})?.submitedTrigger$;
   parentContainer = inject(ControlContainer);
   cdr = inject(ChangeDetectorRef);
   destroy$ = new Subject<boolean>();
@@ -30,7 +30,6 @@ export class FormFields implements OnDestroy {
   }
 
   ngOnDestroy(): void {
-    console.log('FormFields directive destroyed');
     this.destroy$.next(true);
     this.parentFormGroup?.removeControl(this.formArrayName);
   }

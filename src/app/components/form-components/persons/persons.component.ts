@@ -1,5 +1,5 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
-import { AbstractControl, FormArray, Validators } from '@angular/forms';
+import { Component, OnInit } from '@angular/core';
+import { Validators } from '@angular/forms';
 import { CustomValidators } from 'src/app/from-validators/validators';
 import { commonImports, FormFields, viewProviders } from 'src/app/directives/form-fields.directive';
 import { SkillsComponent } from '../skills/skills.component';

@@ -1,40 +1,36 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormGroup, ReactiveFormsModule, ControlContainer, FormGroupDirective } from '@angular/forms';
-import { SkillsComponent } from './skills.component';
-import { of, Subject } from 'rxjs';
+import { PersonsComponent } from './persons.component';
 import { ChangeDetectorRef } from '@angular/core';
-import { FORM_TOKEN } from 'src/app/helpers/common';
 import { ToDosService } from 'src/app/services/todos.service';
+import { of } from 'rxjs';
 
-describe('SkillsComponent', () => {
-  let component: SkillsComponent;
-  let fixture: ComponentFixture<SkillsComponent>;
+describe('PersonsComponent', () => {
+  let component: PersonsComponent;
+  let fixture: ComponentFixture<PersonsComponent>;
   let formGroupDirective: FormGroupDirective;
   let mockToDosService: jasmine.SpyObj<ToDosService>;
-  let mockFormToken: { submitedTrigger$: Subject<void> };
 
   beforeEach(async () => {
+    // required because of skills component dependency
     mockToDosService = jasmine.createSpyObj('ToDosService', ['skills$']);
     mockToDosService.skills$ = of([]);
-
-    mockFormToken = { submitedTrigger$: new Subject<void>() };
 
     formGroupDirective = new FormGroupDirective([], []);
     formGroupDirective.form = new FormGroup({});
 
     await TestBed.configureTestingModule({
-      imports: [SkillsComponent,ReactiveFormsModule],
+      imports: [PersonsComponent, ReactiveFormsModule],
       providers: [
         { provide: ControlContainer, useValue: formGroupDirective },
         { provide: ToDosService, useValue: mockToDosService },
-        { provide: FORM_TOKEN, useValue: mockFormToken },
         { provide: ChangeDetectorRef, useValue: { markForCheck: () => {} } }
       ]
     }).compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(SkillsComponent);
+    fixture = TestBed.createComponent(PersonsComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
@@ -44,23 +40,17 @@ describe('SkillsComponent', () => {
   });
 
   it('should initialize formArray correctly', () => {
-    expect(component.skills.length).toBe(1);
+    expect(component.persons.length).toBe(1);
   });
 
-  it('should add a new skill control', () => {
-    component.addSkill();
-    expect(component.skills.length).toBe(2);
+  it('should add a new person control', () => {
+    component.addPerson();
+    expect(component.persons.length).toBe(2);
   });
 
-  it('should remove a skill control', () => {
-    component.addSkill();
-    component.removeSkill(1);
-    expect(component.skills.length).toBe(1);
-  });
-
-  it('should reset controls when form is submitted', () => {
-    spyOn(component.skills.controls[0], 'reset');
-    mockFormToken.submitedTrigger$.next();
-    expect(component.skills.controls[0].reset).toHaveBeenCalled();
+  it('should remove a person control', () => {
+    component.addPerson();
+    component.removePerson(1);
+    expect(component.persons.length).toBe(1);
   });
 });

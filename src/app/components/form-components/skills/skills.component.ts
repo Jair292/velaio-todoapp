@@ -30,7 +30,7 @@ export class SkillsComponent extends FormFields {
       this.skills = this.formArray;
     }
 
-    this.formSubmited$.pipe(
+    this.formSubmited$?.pipe(
       tap(() => this.skills.controls.forEach(control => control.reset())),
       tap(() => this.cdr.markForCheck()),
       takeUntil(this.destroy$)

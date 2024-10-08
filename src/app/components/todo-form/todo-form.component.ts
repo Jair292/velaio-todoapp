@@ -4,7 +4,7 @@ import { FormBuilder, FormGroupDirective, ReactiveFormsModule, Validators } from
 import { ButtonDirective } from 'src/app/directives/button.directive';
 import { ToDosService } from 'src/app/services/todos.service';
 import { PersonsComponent } from '../form-components/persons/persons.component';
-import { FORM_TOKEN } from 'src/app/helpers/common';
+import { FORM_SUBMIT_TOKEN } from 'src/app/helpers/common';
 import { Subject } from 'rxjs';
 import { ToDo } from 'src/app/models/todo';
 
@@ -16,7 +16,7 @@ import { ToDo } from 'src/app/models/todo';
   styleUrls: ['./todo-form.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [
-    { provide: FORM_TOKEN, useExisting: TodoFormComponent },
+    { provide: FORM_SUBMIT_TOKEN, useFactory: () => inject(TodoFormComponent).submitedTrigger$ },
   ],
 })
 export class TodoFormComponent {

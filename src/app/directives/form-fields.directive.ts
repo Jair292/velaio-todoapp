@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { ChangeDetectorRef, Directive, inject, Input, OnDestroy } from '@angular/core';
 import { ControlContainer, FormArray, FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { Subject } from 'rxjs';
-import { FORM_TOKEN } from '../helpers/common';
+import { FORM_SUBMIT_TOKEN } from '../helpers/common';
 
 export const viewProviders = [
   {
@@ -20,7 +20,7 @@ export class FormFields implements OnDestroy {
   @Input() legend: string = '';
 
   fb = inject(FormBuilder);
-  formSubmited$= inject(FORM_TOKEN, {optional: true})?.submitedTrigger$;
+  formSubmited$ = inject(FORM_SUBMIT_TOKEN, {optional: true});
   parentContainer = inject(ControlContainer);
   cdr = inject(ChangeDetectorRef);
   destroy$ = new Subject<boolean>();

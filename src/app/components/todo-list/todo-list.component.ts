@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, OnDestroy} from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, OnDestroy} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Person, ToDo } from 'src/app/models/todo';
 import { LoaderComponent } from '../loader/loader.component';
@@ -34,27 +34,26 @@ export class TodoListComponent implements OnDestroy {
 
   // Loading state Observables
   updatingToDo$ = new BehaviorSubject<boolean>(false);
-  loadingToDos$ = this.toDosService.loadingToDos$;
+  loadingToDos$ = new BehaviorSubject<boolean>(true);
   filteringToDos$ = new BehaviorSubject<boolean>(false);
 
   // Request trigger Observables
   filterValue$ = new BehaviorSubject<ToDo["status"] | undefined>(undefined);
   page$ = new BehaviorSubject<number>(1);
 
-  state$ = combineLatest([this.filterValue$, this.page$]).pipe(
-    switchMap(([filterValue, page]) =>
-      this.toDosService.requestToDos(filterValue, page).pipe(
-        startWith(null),
-        finalize(() => {
-          this.filteringToDos$.next(false)
-        })
-      )
-    ),
-    takeUntil(this.destroy$),
-  );
-
-  ngOnInit() {
-    this.state$.subscribe(() => this.filteringToDos$.next(true));
+  constructor () {
+    combineLatest([this.filterValue$, this.page$]).pipe(
+      switchMap(([filterValue, page]) =>
+        this.toDosService.requestToDos(filterValue, page).pipe(
+          startWith(null),
+          finalize(() => {
+            this.filteringToDos$.next(false);
+            this.loadingToDos$.next(false);
+          })
+        )
+      ),
+      takeUntil(this.destroy$),
+    ).subscribe(() => this.filteringToDos$.next(true));
   }
 
   ngOnDestroy() {

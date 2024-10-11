@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { ToDo } from '../models/todo';
-import { BehaviorSubject, finalize, Observable, tap } from 'rxjs';
+import { BehaviorSubject, Observable, tap } from 'rxjs';
 
 type requestToDoStatus = ToDo['status'] | 'all';
 type requestResponse = {
@@ -20,7 +20,6 @@ export class ToDosService {
   todos$: Observable<ToDo[]> = this.#todos.asObservable();
   #skills = new BehaviorSubject<string[]>([]);
   skills$: Observable<string[]> = this.#skills.asObservable();
-  loadingToDos$ = new BehaviorSubject<boolean>(true);
   totalPages$ = new BehaviorSubject<number>(0);
 
   requestToDos(status: requestToDoStatus = 'all', page: number, pageSize: number = 10) {
@@ -28,8 +27,7 @@ export class ToDosService {
       tap(response => {
         this.#todos.next(response.data || []);
         this.totalPages$.next(response.pagination?.pagesCount || 0);
-      }),
-      finalize(() => this.loadingToDos$.next(false))
+      })
     );
   }
 

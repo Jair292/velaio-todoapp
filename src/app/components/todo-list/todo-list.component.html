@@ -15,7 +15,7 @@
       </div>
       <div class="todo" *ngFor="let todo of ToDos; let i = index; trackBy: trackByFn">
         <span class="todo-title">{{i+1+((page$.value-1)*10)}}.
-          <input type="checkbox" (click)="changeStatus(todo)" [checked]="getStatus(todo.status)"/> {{todo.name | titlecase}} - {{todo.endDate | date}}</span>
+          <input type="checkbox" (click)="changeStatus(todo)" [checked]="getStatusForCheckbox(todo.status)"/> {{todo.name | titlecase}} - {{todo.endDate | date}}</span>
         <span class="todo-sub-title">Associated people:</span>
         <div class="person-container" *ngFor="let person of todo.persons; let j = index; trackBy: trackByFn">
           <span class="person-name">- {{person.name}} ({{person.age}})</span>

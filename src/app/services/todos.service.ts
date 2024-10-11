@@ -24,7 +24,6 @@ export class ToDosService {
   totalPages$ = new BehaviorSubject<number>(0);
 
   requestToDos(status: requestToDoStatus = 'all', page: number, pageSize: number = 10) {
-    // inMemoryService ir not getting HttpParams as query params
     return this.#http.get<requestResponse>(`/api/todos?status=${status}&page=${page}&pageSize=${pageSize}`).pipe(
       tap(response => {
         this.#todos.next(response.data || []);

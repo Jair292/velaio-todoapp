@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { Validators } from '@angular/forms';
 import { CustomValidators } from 'src/app/from-validators/validators';
 import { commonImports, FormFields, viewProviders } from 'src/app/directives/form-fields.directive';
@@ -15,6 +15,7 @@ import { trackByFn } from 'src/app/helpers/common';
   viewProviders: [...viewProviders],
 })
 export class PersonsComponent extends FormFields implements OnInit {
+  @Input() withSkills: boolean = false;
   persons = this.createPersons();
   trackByFn = trackByFn;
 

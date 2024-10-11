@@ -26,7 +26,6 @@ import { PaginatorComponent } from '../paginator/paginator.component';
 })
 export class TodoListComponent implements OnDestroy {
   toDosService = inject(ToDosService);
-  cd = inject(ChangeDetectorRef);
   destroy$ = new Subject<void>();
 
   // Data Observable from Service
@@ -52,7 +51,11 @@ export class TodoListComponent implements OnDestroy {
       )
     ),
     takeUntil(this.destroy$),
-  ).subscribe(() => this.filteringToDos$.next(true));
+  );
+
+  ngOnInit() {
+    this.state$.subscribe(() => this.filteringToDos$.next(true));
+  }
 
   ngOnDestroy() {
     this.destroy$.next();
@@ -62,7 +65,7 @@ export class TodoListComponent implements OnDestroy {
     this.page$.next(page);
   }
 
-  getStatus(status: ToDo["status"]): boolean {
+  getStatusForCheckbox(status: ToDo["status"]): boolean {
     return status == "open" ? false : true;
   }
 

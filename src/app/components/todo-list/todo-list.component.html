@@ -1,37 +1,41 @@
-<h1>ToDo List</h1>
-<ng-container *ngIf="!(loadingToDos$ | async); else loading">
-  <div class="actions">
-    <div class="filter">
-      <span>Filter:</span>
-      <input type="radio" name="filter" id="filter-all" [value]="undefined" checked (change)="updateFilterValue(undefined)"><label for="filter-all">All</label>
-      <input type="radio" name="filter" id="filter-open" value="open" (change)="updateFilterValue('open')"><label for="filter-open">Open</label>
-      <input type="radio" name="filter" id="filter-closed" value="closed" (change)="updateFilterValue('closed')"><label for="filter-closed">Closed</label>
+<ng-container *ngIf="vmState$ |async as vm">
+  <h1>ToDo List</h1>
+  <ng-container *ngIf="!vm.loadingToDos else loading">
+    <div class="actions">
+      <div class="filter">
+        <span>Filter:</span>
+        <input type="radio" name="filter" id="filter-all" [value]="undefined" checked (change)="updateFilterValue(undefined)"><label for="filter-all">All</label>
+        <input type="radio" name="filter" id="filter-open" value="open" (change)="updateFilterValue('open')"><label for="filter-open">Open</label>
+        <input type="radio" name="filter" id="filter-closed" value="closed" (change)="updateFilterValue('closed')"><label for="filter-closed">Closed</label>
+      </div>
     </div>
-  </div>
-  <div class="todos-container" [class.disabled]="(updatingToDo$ | async) || (filteringToDos$ | async)">
-    <ng-container *ngIf="(todos$ | async) as ToDos;">
-      <div *ngIf="ToDos.length == 0" class="no-todos">
-        No ToDos
-      </div>
-      <div class="todo" *ngFor="let todo of ToDos; let i = index; trackBy: trackByFn">
-        <span class="todo-title">{{i+1+((page$.value-1)*10)}}.
-          <input type="checkbox" (click)="changeStatus(todo)" [checked]="getStatusForCheckbox(todo.status)"/> {{todo.name | titlecase}} - {{todo.endDate | date}}</span>
-        <span class="todo-sub-title">Associated people:</span>
-        <div class="person-container" *ngFor="let person of todo.persons; let j = index; trackBy: trackByFn">
-          <span class="person-name">- {{person.name}} ({{person.age}})</span>
-          <span class="person-skills">
-            Skills: <ng-container *ngFor="let skill of person.skills; let k = index; trackBy: trackByFn">
-              {{skill}}
-            </ng-container>
-          </span>
+    <div class="todos-container" [class.disabled]="vm.updatingToDo || vm.filteringToDos">
+      <ng-container *ngIf="(todos$ | async) as ToDos;">
+        <div *ngIf="ToDos.length == 0" class="no-todos">
+          No ToDos
         </div>
-      </div>
-    </ng-container>
-  </div>
-  <div class="pagination">
-    <app-paginator [page]="(page$ |async) || 0" [totalPages]="(totalPages$ | async) || 0" (pageChanged)="changePage($event)"></app-paginator>
-  </div>
+        <div class="todo" *ngFor="let todo of ToDos; let i = index; trackBy: trackByFn">
+          <span class="todo-title">{{getIndex(i)}}.
+            <input type="checkbox" (click)="changeStatus(todo)" [checked]="getStatusForCheckbox(todo.status)"/> {{todo.name | titlecase}} - {{todo.endDate | date}}</span>
+          <span class="todo-sub-title">Associated people:</span>
+          <div class="person-container" *ngFor="let person of todo.persons; let j = index; trackBy: trackByFn">
+            <span class="person-name">- {{person.name}} ({{person.age}})</span>
+            <span class="person-skills">
+              Skills: <ng-container *ngFor="let skill of person.skills; let k = index; trackBy: trackByFn">
+                {{skill}}
+              </ng-container>
+            </span>
+          </div>
+        </div>
+      </ng-container>
+    </div>
+    <div class="pagination">
+      <app-paginator [page]="(page$ |async) || 0" [totalPages]="(totalPages$ | async) || 0" (pageChanged)="changePage($event)"></app-paginator>
+    </div>
+  </ng-container>
 </ng-container>
+
+
 
 <ng-template #loading>
   <app-loader></app-loader>

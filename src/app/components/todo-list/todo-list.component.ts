@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject, OnDestroy} from '@angular/core';
+import { ChangeDetectionStrategy, Component, ElementRef, inject, OnDestroy, ViewContainerRef} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Person, ToDo } from 'src/app/models/todo';
 import { LoaderComponent } from '../loader/loader.component';
@@ -6,7 +6,7 @@ import { ToDoFilterPipe } from 'src/app/pipes/todofilter.pipe';
 import { ToDosService } from 'src/app/services/todos.service';
 import { ButtonDirective } from 'src/app/directives/button.directive';
 import { FormsModule } from '@angular/forms';
-import { BehaviorSubject, combineLatest, finalize, startWith, Subject, switchMap, takeUntil, tap } from 'rxjs';
+import { BehaviorSubject, combineLatest, finalize, map, startWith, Subject, switchMap, takeUntil, tap } from 'rxjs';
 import { PaginatorComponent } from '../paginator/paginator.component';
 
 @Component({
@@ -27,6 +27,7 @@ import { PaginatorComponent } from '../paginator/paginator.component';
 export class TodoListComponent implements OnDestroy {
   toDosService = inject(ToDosService);
   destroy$ = new Subject<void>();
+  #er = inject(ElementRef);
 
   // Data Observable from Service
   todos$ = this.toDosService.todos$;
@@ -36,6 +37,9 @@ export class TodoListComponent implements OnDestroy {
   updatingToDo$ = new BehaviorSubject<boolean>(false);
   loadingToDos$ = new BehaviorSubject<boolean>(true);
   filteringToDos$ = new BehaviorSubject<boolean>(false);
+  vmState$ = combineLatest([this.updatingToDo$, this.loadingToDos$, this.filteringToDos$]).pipe(
+    map(([updatingToDo, loadingToDos, filteringToDos]) => ({ updatingToDo, loadingToDos, filteringToDos})),
+  )
 
   // Request trigger Observables
   filterValue$ = new BehaviorSubject<ToDo["status"] | undefined>(undefined);
@@ -60,8 +64,13 @@ export class TodoListComponent implements OnDestroy {
     this.destroy$.next();
   }
 
+  getIndex(i: number) {
+    return i+1+((this.page$.value-1)*10);
+  }
+
   changePage(page: number) {
     this.page$.next(page);
+    this.#er.nativeElement.scrollIntoView({ behavior: "smooth"});
   }
 
   getStatusForCheckbox(status: ToDo["status"]): boolean {

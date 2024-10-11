@@ -9,9 +9,9 @@ import { BehaviorSubject } from 'rxjs';
   imports: [CommonModule, ButtonDirective],
   template: `
     <ng-container *ngIf="currentPage$ | async as currentPage">
-      <button (click)="changePage(currentPage - 1)" [disabled]="currentPage <= 1">﹤</button>
+      <button (click)="changePage(currentPage - 1)" [disabled]="currentPage <= 1" size="small">﹤</button>
       <span>page {{currentPage}} of {{totalPages}}</span>
-      <button (click)="changePage(currentPage +1)" [disabled]="currentPage >= totalPages">﹥</button>
+      <button (click)="changePage(currentPage +1)" [disabled]="currentPage >= totalPages" size="small">﹥</button>
     </ng-container>
   `,
   styles: [

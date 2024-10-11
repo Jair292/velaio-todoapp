@@ -9,9 +9,9 @@ import { BehaviorSubject } from 'rxjs';
   imports: [CommonModule, ButtonDirective],
   template: `
     <ng-container *ngIf="currentPage$ | async as currentPage">
-      <button (click)="changePage(currentPage - 1)" [disabled]="currentPage == 1">﹤</button>
+      <button (click)="changePage(currentPage - 1)" [disabled]="currentPage <= 1">﹤</button>
       <span>page {{currentPage}} of {{totalPages}}</span>
-      <button (click)="changePage(currentPage +1)" [disabled]="currentPage == totalPages" [class.disabled]="currentPage == totalPages">﹥</button>
+      <button (click)="changePage(currentPage +1)" [disabled]="currentPage >= totalPages">﹥</button>
     </ng-container>
   `,
   styles: [
@@ -35,7 +35,7 @@ export class PaginatorComponent {
   set page(value: number) {
     this.currentPage$.next(value || 1);
   }
-  @Input({required: true}) totalPages!: number;
+  @Input({required: true}) totalPages: number = 1;
   @Output() pageChanged = new EventEmitter<number>();
 
   currentPage$ = new BehaviorSubject<number>(1);

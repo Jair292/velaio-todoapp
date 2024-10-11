@@ -10,7 +10,7 @@
       </div>
     </div>
     <div class="todos-container" [class.disabled]="vm.updatingToDo || vm.filteringToDos">
-      <ng-container *ngIf="(todos$ | async) as ToDos;">
+      <ng-container *ngIf="vm.todos as ToDos">
         <div *ngIf="ToDos.length == 0" class="no-todos">
           No ToDos
         </div>
@@ -30,7 +30,7 @@
       </ng-container>
     </div>
     <div class="pagination">
-      <app-paginator [page]="(page$ |async) || 0" [totalPages]="(totalPages$ | async) || 0" (pageChanged)="changePage($event)"></app-paginator>
+      <app-paginator [page]="vm.page" [totalPages]="vm.totalPages" (pageChanged)="changePage($event)"></app-paginator>
     </div>
   </ng-container>
 </ng-container>

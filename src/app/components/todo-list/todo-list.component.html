@@ -1,6 +1,6 @@
 <ng-container *ngIf="vmState$ |async as vm">
   <h1>ToDo List</h1>
-  <ng-container *ngIf="!vm.loadingToDos else loading">
+  <ng-container *ngIf="!vm.viewState.loadingToDos else loading">
     <div class="actions">
       <div class="filter">
         <span>Filter:</span>
@@ -9,13 +9,13 @@
         <input type="radio" name="filter" id="filter-closed" value="closed" (change)="updateFilterValue('closed')"><label for="filter-closed">Closed</label>
       </div>
     </div>
-    <div class="todos-container" [class.disabled]="vm.updatingToDo || vm.filteringToDos">
+    <div class="todos-container" [class.disabled]="vm.viewState.updatingToDo || vm.viewState.filteringToDos">
       <ng-container *ngIf="vm.todos as ToDos">
         <div *ngIf="ToDos.length == 0" class="no-todos">
           No ToDos
         </div>
         <div class="todo" *ngFor="let todo of ToDos; let i = index; trackBy: trackByFn">
-          <span class="todo-title">{{getIndex(i)}}.
+          <span class="todo-title">{{displayToDoIndex(i, vm.pagination.page)}}.
             <input type="checkbox" (click)="changeStatus(todo)" [checked]="getStatusForCheckbox(todo.status)"/> {{todo.name | titlecase}} - {{todo.endDate | date}}</span>
           <span class="todo-sub-title">Associated people:</span>
           <div class="person-container" *ngFor="let person of todo.persons; let j = index; trackBy: trackByFn">
@@ -30,12 +30,10 @@
       </ng-container>
     </div>
     <div class="pagination">
-      <app-paginator [page]="vm.page" [totalPages]="vm.totalPages" (pageChanged)="changePage($event)"></app-paginator>
+      <app-paginator [page]="vm.pagination.page" [totalPages]="vm.pagination.pagesCount" (pageChanged)="changePage($event)"></app-paginator>
     </div>
   </ng-container>
 </ng-container>
-
-
 
 <ng-template #loading>
   <app-loader></app-loader>

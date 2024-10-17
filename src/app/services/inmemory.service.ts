@@ -42,7 +42,7 @@ export class InmemoryService implements InMemoryDbService {
       ...Array.from({length: 100}, (_, i) => {
         return {
           id: this.generateRandomId(),
-          name: `${faker.helpers.arrayElement(todoNames)}-${i}`,
+          name: `${faker.helpers.arrayElement(todoNames)}-${i+1}`,
           endDate: faker.date.recent(),
           status: faker.helpers.arrayElement(['open', 'closed']),
           persons: [
@@ -156,12 +156,13 @@ export class InmemoryService implements InMemoryDbService {
 
       let status = STATUS.NOT_FOUND
 
-      collection.forEach(todo => {
+      for (let todo of collection) {
         if (todo.id === requestInfo.id) {
-          Object.assign(todo, requestInfo.utils.getJsonBody(requestInfo.req));
+          todo = requestInfo.utils.getJsonBody(requestInfo.req);
           status = STATUS.OK
+          break;
         }
-      })
+      }
 
       const options: ResponseOptions = {
         body: {

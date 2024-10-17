@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, ElementRef, inject, OnDestroy } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ElementRef, inject, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Person, ToDo } from 'src/app/models/todo';
 import { LoaderComponent } from '../loader/loader.component';
@@ -6,8 +6,12 @@ import { ToDoFilterPipe } from 'src/app/pipes/todofilter.pipe';
 import { ToDosService } from 'src/app/services/todos.service';
 import { ButtonDirective } from 'src/app/directives/button.directive';
 import { FormsModule } from '@angular/forms';
-import { BehaviorSubject, catchError, combineLatest, EMPTY, finalize, map, startWith, Subject, switchMap, takeUntil, tap } from 'rxjs';
+import { combineLatest, map, Subject } from 'rxjs';
 import { PaginatorComponent } from '../paginator/paginator.component';
+import { Store } from '@ngrx/store';
+import * as toDoActions from '../../store/store.actions';
+import { selectFilters, selectPage, selectPagination, selectTodos, selectViewState } from 'src/app/store/store.selectors';
+import { ToDosState } from 'src/app/store/store.reducers';
 
 @Component({
   selector: "app-todo-list",
@@ -24,78 +28,84 @@ import { PaginatorComponent } from '../paginator/paginator.component';
   styleUrls: ["./todo-list.component.scss"],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class TodoListComponent implements OnDestroy {
+export class TodoListComponent implements OnInit, OnDestroy {
   toDosService = inject(ToDosService);
   destroy$ = new Subject<void>();
   #er = inject(ElementRef);
+  store = inject(Store<ToDosState>);
+  todos$ = this.store.select(selectTodos);
+  filters$ = this.store.select(selectFilters);
+  pagination$ = this.store.select(selectPagination);
+  page$ = this.store.select(selectPage);
+  viewState$ = this.store.select(selectViewState);
 
-  // Data Observable from Service
-  todos$ = this.toDosService.todos$;
-  totalPages$ = this.toDosService.totalPages$;
 
   // Loading state Observables
-  updatingToDo$ = new BehaviorSubject<boolean>(false);
-  loadingToDos$ = new BehaviorSubject<boolean>(true);
-  filteringToDos$ = new BehaviorSubject<boolean>(false);
+  // updatingToDo$ = new BehaviorSubject<boolean>(false);
+  // loadingToDos$ = new BehaviorSubject<boolean>(true);
+  // filteringToDos$ = new BehaviorSubject<boolean>(false);
 
   // Request trigger Observables
-  filterValue$ = new BehaviorSubject<ToDo["status"] | undefined>(undefined);
-  page$ = new BehaviorSubject<number>(1);
+  // filterValue$ = new BehaviorSubject<ToDo["status"] | undefined>(undefined);
+  // page$ = new BehaviorSubject<number>(1);
 
   vmState$ = combineLatest([
-    this.updatingToDo$,
-    this.loadingToDos$,
-    this.filteringToDos$,
-    this.todos$.pipe(startWith([]), catchError(() => EMPTY)),
-    this.totalPages$.pipe(startWith(1), catchError(() => EMPTY)),
-    this.page$
+    this.todos$,
+    this.filters$,
+    this.viewState$,
+    this.pagination$,
   ]).pipe(
     map(
       ([
-        updatingToDo,
-        loadingToDos,
-        filteringToDos,
         todos,
-        totalPages,
-        page
+        filters,
+        viewState,
+        pagination
       ]) => ({
-        updatingToDo,
-        loadingToDos,
-        filteringToDos,
         todos,
-        totalPages,
-        page
+        filters,
+        viewState,
+        pagination
       })
     )
   );
 
   constructor() {
-    combineLatest([this.filterValue$, this.page$])
-      .pipe(
-        switchMap(([filterValue, page]) =>
-          this.toDosService.requestToDos(filterValue, page).pipe(
-            startWith(null),
-            finalize(() => {
-              this.filteringToDos$.next(false);
-              this.loadingToDos$.next(false);
-            })
-          )
-        ),
-        takeUntil(this.destroy$)
-      )
-      .subscribe(() => this.filteringToDos$.next(true));
+    // combineLatest([this.filters$, this.page$]).pipe(
+    //   map(([filters, page]) => {
+    //     return this.store.dispatch(actions.getToDos({ status: filters.status, page, pageSize: 10 }))
+    //   }
+    // ))
+    // combineLatest([this.filterValue$, this.page$])
+    //   .pipe(
+    //     switchMap(([filterValue, page]) =>
+    //       this.toDosService.requestToDos(filterValue, page).pipe(
+    //         startWith(null),
+    //         finalize(() => {
+    //           this.filteringToDos$.next(false);
+    //           this.loadingToDos$.next(false);
+    //         })
+    //       )
+    //     ),
+    //     takeUntil(this.destroy$)
+    //   )
+    //   .subscribe(() => this.filteringToDos$.next(true));
+  }
+
+  ngOnInit() {
+    this.store.dispatch(toDoActions.getToDos({ status: 'all', page: 1, pageSize: 10 }));
   }
 
   ngOnDestroy() {
     this.destroy$.next();
   }
 
-  getIndex(i: number) {
-    return i + 1 + (this.page$.value - 1) * 10;
+  displayToDoIndex(i: number, page: number) {
+    return i + 1 + (page - 1) * 10;
   }
 
   changePage(page: number) {
-    this.page$.next(page);
+    this.store.dispatch(toDoActions.changePage({ page }));
     this.#er.nativeElement.scrollIntoView({ behavior: "smooth" });
   }
 
@@ -104,21 +114,26 @@ export class TodoListComponent implements OnDestroy {
   }
 
   updateFilterValue(value: ToDo["status"] | undefined) {
-    this.filterValue$.next(value);
-    this.page$.next(1);
+    // this.filterValue$.next(value);
+    // this.page$.next(1);
   }
 
   changeStatus(toDo: ToDo) {
-    const status = toDo.status == "open" ? "closed" : "open";
-    this.toDosService
-      .updateToDo(toDo, { prop: "status", value: status })
-      .pipe(
-        tap(() => this.page$.next(this.page$.value)),
-        finalize(() => this.updatingToDo$.next(false))
-      )
-      .subscribe();
+    const updatedToDo: ToDo = {
+      ...toDo,
+      status: toDo.status == "open" ? "closed" : "open",
+    }
+    this.store.dispatch(toDoActions.updateToDo({ toDo: updatedToDo }));
+    // const status = toDo.status == "open" ? "closed" : "open";
+    // this.updatingToDo$.next(true);
 
-    this.updatingToDo$.next(true);
+    // this.toDosService
+    //   .updateToDo(toDo, { prop: "status", value: status })
+    //   .pipe(
+    //     tap(() => this.page$.next(this.page$.value)),
+    //     finalize(() => this.updatingToDo$.next(false))
+    //   )
+    //   .subscribe();
   }
 
   trackByFn(index: number, item: ToDo | Person | string): number | string {

@@ -3,12 +3,14 @@ import { inject, Injectable } from '@angular/core';
 import { ToDo } from '../models/todo';
 import { BehaviorSubject, delay, map, Observable, tap } from 'rxjs';
 
-type requestToDoStatus = ToDo['status'] | 'all';
-type requestResponse = {
-  data?: ToDo[];
+export type FilterValueStatus = ToDo['status'] | 'all';
+export type ResponseStatus = {
   status: unknown;
-  pagination?: { page: number; pageSize: number; pagesCount: number };
-};
+}
+export type RequestToDos = {
+  data: ToDo[];
+  pagination: { page: number; pageSize: number; pagesCount: number };
+} & ResponseStatus;
 
 @Injectable({
   providedIn: 'root'
@@ -23,13 +25,8 @@ export class ToDosService {
   skills$: Observable<string[]> = this.#skills.asObservable();
   totalPages$ = new BehaviorSubject<number>(1);
 
-  requestToDos(status: requestToDoStatus = 'all', page: number, pageSize: number = 10) {
-    return this.#http.get<requestResponse>(`/api/todos?status=${status}&page=${page}&pageSize=${pageSize}`).pipe(
-      tap(response => {
-        this.#todos.next(response.data || []);
-        this.totalPages$.next(response.pagination?.pagesCount || 1);
-      })
-    );
+  requestToDos(status: FilterValueStatus = 'all', page: number, pageSize: number = 10) {
+    return this.#http.get<RequestToDos>(`/api/todos?status=${status}&page=${page}&pageSize=${pageSize}`);
   }
 
   // TODO: move to a separate service
@@ -51,12 +48,10 @@ export class ToDosService {
       status: 'open'
     };
 
-    return this.#http.post<requestResponse>('/api/todos', newToDo);
+    return this.#http.post<ResponseStatus>('/api/todos', newToDo);
   }
 
-  updateToDo(todo: ToDo, config: { prop: keyof ToDo, value: ToDo[keyof ToDo] }) {
-    const updatedTodo = { ...todo, [config.prop]: config.value };
-
-    return this.#http.put<requestResponse>(`/api/todos/${todo.id}`, updatedTodo);
+  updateToDo(todo: ToDo) {
+    return this.#http.put<ResponseStatus>(`/api/todos/${todo.id}`, todo);
   }
 }

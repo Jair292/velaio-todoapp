@@ -7,6 +7,10 @@ import { HttpClientModule } from '@angular/common/http';
 import { HttpClientInMemoryWebApiModule } from 'angular-in-memory-web-api';
 import { InmemoryService } from './services/inmemory.service';
 import { HeaderComponent } from './components/header/header.component';
+import { provideStore } from '@ngrx/store';
+import { todosReducer } from './store/store.reducers';
+import { provideEffects } from '@ngrx/effects';
+import * as todoEffects from  './store/store.effects';
 
 @NgModule({
   declarations: [
@@ -17,9 +21,12 @@ import { HeaderComponent } from './components/header/header.component';
     BrowserModule,
     AppRoutingModule,
     HttpClientModule,
-    HttpClientInMemoryWebApiModule.forRoot(InmemoryService, { delay: 500 })
+    HttpClientInMemoryWebApiModule.forRoot(InmemoryService, { delay: 500 }),
   ],
-  providers: [],
+  providers: [
+    provideStore({ appState: todosReducer }),
+    provideEffects(todoEffects)
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

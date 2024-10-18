@@ -1,50 +1,28 @@
-import { createAction, props } from "@ngrx/store";
+import { createActionGroup, emptyProps, props } from "@ngrx/store";
 import { ToDo } from "../models/todo";
 import { ToDosState } from "./store.reducers";
+import { FilterValueStatus } from "../services/todos.service";
 
 type Pagination = ToDosState['pagination'];
 
-export const getToDos = createAction(
-  '[Todo] Get ToDos',
-  props<{ status: ToDo['status'] | 'all', page: number, pageSize?: number }>()
-)
+export const toDosActions = createActionGroup({
+  source: '[ToDo]',
+  events: {
+    'Get ToDos': emptyProps(),
+    'Get ToDos Success': props<{ toDos: ToDo[], status: FilterValueStatus, pagination: Pagination }>(),
+    'Add ToDo': props<{ toDo: Partial<ToDo> }>(),
+    'Add ToDo Success': props<{ status: unknown }>(),
+    'Add ToDo Failure': props<{ status: unknown }>(),
+    'Update ToDo': props<{ toDo: ToDo }>(),
+    'Update ToDo Success': props<{ status: unknown }>(),
+    'Update ToDo Failure': props<{ status: unknown }>()
+  }
+});
 
-export const getToDosSuccess = createAction(
-  '[Todo] Get ToDos Success',
-  props<{ toDos: ToDo[], status: ToDo['status'] | 'all', pagination: Pagination }>()
-)
-
-export const addToDo = createAction(
-  '[Todo] Add Todo',
-  props<{ toDo: Partial<ToDo> }>()
-)
-
-export const addToDoSuccess = createAction(
-  '[Todo] Add Todo Success',
-  props<{ status: unknown }>()
-)
-
-export const updateToDo = createAction(
-  '[Todo] Update Todo',
-  props<{ toDo: ToDo }>()
-)
-
-export const updateToDoSuccess = createAction(
-  '[Todo] Update Todo Success',
-  props<{ status: unknown }>()
-)
-
-// export const deleteTodo = createAction(
-//   '[Todo] Delete Todo',
-//   props<{ id: number }>()
-// )
-
-// export const deleteTodoSuccess = createAction(
-//   '[Todo] Delete Todo',
-//   props<{ id: number }>()
-// )
-
-export const changePage = createAction(
-  '[Todo] Change Page',
-  props<{ page: number, pageSize?: number }>()
-)
+export const listActions = createActionGroup({
+  source: '[ToDo]',
+  events: {
+    'Filter ToDos': props<{ filterValue: FilterValueStatus, page: 1, pageSize?: number }>(), // success and error handled by getToDos
+    'Change Page': props<{ page: number, pageSize?: number }>(), // success and error handled by getToDos
+  }
+});

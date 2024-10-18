@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { isDevMode, NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 
 import { AppRoutingModule } from './app-routing.module';
@@ -11,6 +11,7 @@ import { provideStore } from '@ngrx/store';
 import { todosReducer } from './store/store.reducers';
 import { provideEffects } from '@ngrx/effects';
 import * as todoEffects from  './store/store.effects';
+import { provideStoreDevtools } from '@ngrx/store-devtools';
 
 @NgModule({
   declarations: [
@@ -25,7 +26,11 @@ import * as todoEffects from  './store/store.effects';
   ],
   providers: [
     provideStore({ appState: todosReducer }),
-    provideEffects(todoEffects)
+    provideEffects(todoEffects),
+    provideStoreDevtools({
+      maxAge: 25,
+      logOnly: !isDevMode(),
+    }),
   ],
   bootstrap: [AppComponent]
 })

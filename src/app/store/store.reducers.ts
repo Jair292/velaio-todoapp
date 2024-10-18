@@ -1,6 +1,6 @@
 import { createReducer, on } from "@ngrx/store";
 import { ToDo } from "../models/todo";
-import * as toDoActions from "./store.actions";
+import * as storeActions from "./store.actions";
 import { FilterValueStatus } from "../services/todos.service";
 
 export interface ToDosState {
@@ -9,16 +9,20 @@ export interface ToDosState {
   },
   filters: {
     status: FilterValueStatus
-  }
+  },
   viewState: {
     loadingToDos: boolean;
     updatingToDo: boolean;
     filteringToDos: boolean;
+    changinPageToDos: boolean;
   },
   pagination: {
     page: number;
     pageSize: number;
     pagesCount: number;
+  },
+  errors: {
+    [key: string]: unknown;
   }
 }
 
@@ -33,17 +37,19 @@ export const initialState: ToDosState = {
     loadingToDos: true,
     updatingToDo: false,
     filteringToDos: false,
+    changinPageToDos: false
   },
   pagination: {
     page: 1,
     pageSize: 10,
     pagesCount: 1
-  }
+  },
+  errors: {}
 }
 
 export const todosReducer = createReducer(
   initialState,
-  on(toDoActions.getToDos, (state) => {
+  on(storeActions.toDosActions.getToDos, (state) => {
     return {
       ...state,
       viewState: {
@@ -52,7 +58,25 @@ export const todosReducer = createReducer(
       }
     }
   }),
-  on(toDoActions.getToDosSuccess, (state, { toDos, status, pagination }) => {
+  on(storeActions.listActions.changePage, (state) => {
+    return {
+      ...state,
+      viewState: {
+        ...state.viewState,
+        changinPageToDos: true
+      }
+    }
+  }),
+  on(storeActions.listActions.filterToDos, (state) => {
+    return {
+      ...state,
+      viewState: {
+        ...state.viewState,
+        filteringToDos: true
+      }
+    }
+  }),
+  on(storeActions.toDosActions.getToDosSuccess, (state, { toDos, status, pagination }) => {
     return {
       ...state,
       data: {
@@ -65,7 +89,9 @@ export const todosReducer = createReducer(
       },
       viewState: {
         ...state.viewState,
-        loadingToDos: false
+        loadingToDos: false,
+        filteringToDos: false,
+        changinPageToDos: false
       },
       pagination: {
         ...state.pagination,
@@ -73,17 +99,7 @@ export const todosReducer = createReducer(
       }
     }
   }),
-  on(toDoActions.addToDo, (state, { toDo }) => {
-    return {
-      ...state
-    }
-  }),
-  on(toDoActions.addToDoSuccess, (state, { status }) => {
-    return {
-      ...state
-    }
-  }),
-  on(toDoActions.updateToDo, (state, { toDo }) => {
+  on(storeActions.toDosActions.updateToDo, (state, { toDo }) => {
     return {
       ...state,
       viewState: {
@@ -92,7 +108,7 @@ export const todosReducer = createReducer(
       }
     }
   }),
-  on(toDoActions.updateToDoSuccess, (state, { status }) => {
+  on(storeActions.toDosActions.updateToDoSuccess, (state, { status }) => {
     return {
       ...state,
       viewState: {
@@ -101,17 +117,7 @@ export const todosReducer = createReducer(
       }
     }
   }),
-  // on(storeActions.deleteTodoSuccess, (state, { id }) => {
-  //   return {
-  //     ...state,
-  //     data: {
-  //       ...state.data,
-  //       todos: state.data.todos.filter(todo => todo.id !== id)
-  //     }
-  //   }
-  // }),
-
-  on(toDoActions.changePage, (state, { page }) => {
+  on(storeActions.listActions.changePage, (state, { page }) => {
     return {
       ...state,
       pagination: {

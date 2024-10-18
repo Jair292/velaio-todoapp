@@ -6,6 +6,7 @@ import { catchError, EMPTY, map, switchMap, withLatestFrom } from "rxjs";
 import { Store } from "@ngrx/store";
 import { AppState } from "./store.selectors";
 import * as todoSelectors from "./store.selectors";
+import { SkillsService } from "../services/skills.service";
 
 export const getToDos = createEffect(
   (actions$ = inject(Actions), toDoService = inject(ToDosService), store = inject(Store<AppState>)) => {
@@ -65,6 +66,21 @@ export const updateToDo = createEffect(
       switchMap((action) =>
         toDoService.updateToDo(action.toDo).pipe(
           map((response: ResponseStatus) => storeActions.toDosActions.updateToDoSuccess(response)),
+          catchError(() => EMPTY) // TODO: add error handle fn
+        )
+      )
+    )
+  },
+  { functional: true }
+);
+
+export const getSkills = createEffect(
+  (actions$ = inject(Actions), skillsService = inject(SkillsService)) => {
+    return actions$.pipe(
+      ofType(storeActions.skillsActions.getSkills),
+      switchMap(() =>
+        skillsService.requestSkills().pipe(
+          map((response: string[]) => storeActions.skillsActions.getSkillsSuccess({ skills: response })),
           catchError(() => EMPTY) // TODO: add error handle fn
         )
       )

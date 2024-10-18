@@ -6,6 +6,7 @@ import { FilterValueStatus } from "../services/todos.service";
 export interface ToDosState {
   data: {
     toDos: ToDo[];
+    skills: string[];
   },
   filters: {
     status: FilterValueStatus
@@ -29,6 +30,7 @@ export interface ToDosState {
 export const initialState: ToDosState = {
   data: {
     toDos: [],
+    skills: []
   },
   filters: {
     status: 'all',
@@ -123,6 +125,15 @@ export const todosReducer = createReducer(
       pagination: {
         ...state.pagination,
         page
+      }
+    }
+  }),
+  on(storeActions.skillsActions.getSkillsSuccess, (state, { skills }) => {
+    return {
+      ...state,
+      data: {
+        ...state.data,
+        skills
       }
     }
   })

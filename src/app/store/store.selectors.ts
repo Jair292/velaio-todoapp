@@ -6,10 +6,10 @@ export interface AppState {
 
 // Data
 export const selectTodos = (state: AppState) => state.appState.data.toDos;
+export const selectSkills = (state: AppState) => state.appState.data.skills;
 
 // Filters
 export const selectFilters = (state: AppState) => state.appState.filters;
-// export const selectStatus = (state: AppState) => state.appState.filters.status;
 
 // View State
 export const selectViewState = (state: AppState) => state.appState.viewState;
@@ -22,3 +22,6 @@ export const selectPagination = (state: AppState) => state.appState.pagination;
 export const selectPage = (state: AppState) => state.appState.pagination.page;
 export const selectPageSize = (state: AppState) => state.appState.pagination.pageSize;
 export const selectPagesCount = (state: AppState) => state.appState.pagination.pagesCount;
+
+// Errors
+export const selectErrors = (state: AppState) => state.appState.errors;

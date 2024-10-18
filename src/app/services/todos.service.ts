@@ -17,19 +17,11 @@ export type RequestToDos = {
 })
 export class ToDosService {
   #http = inject(HttpClient);
-
   #skills = new BehaviorSubject<string[]>([]);
   skills$: Observable<string[]> = this.#skills.asObservable();
 
   requestToDos(status: FilterValueStatus = 'all', page: number, pageSize: number = 10) {
     return this.#http.get<RequestToDos>(`/api/todos?status=${status}&page=${page}&pageSize=${pageSize}`);
-  }
-
-  // TODO: move to a separate service
-  requestSkills() {
-    return this.#http.get<string[]>('/api/skills').pipe(
-      tap(skills => this.#skills.next(skills))
-    );
   }
 
   addToDo(todo: Partial<ToDo>) {

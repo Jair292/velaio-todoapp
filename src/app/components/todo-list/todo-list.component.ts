@@ -10,7 +10,7 @@ import { combineLatest, map, Subject } from 'rxjs';
 import { PaginatorComponent } from '../paginator/paginator.component';
 import { Store } from '@ngrx/store';
 import * as storeActions from '../../store/store.actions';
-import { selectFilters, selectPage, selectPagination, selectTodos, selectViewState } from 'src/app/store/store.selectors';
+import { selectFilters, selectPagination, selectTodos, selectViewState } from 'src/app/store/store.selectors';
 import { ToDosState } from 'src/app/store/store.reducers';
 
 @Component({
@@ -36,7 +36,6 @@ export class TodoListComponent implements OnInit, OnDestroy {
   todos$ = this.store.select(selectTodos);
   filters$ = this.store.select(selectFilters);
   pagination$ = this.store.select(selectPagination);
-  page$ = this.store.select(selectPage);
   viewState$ = this.store.select(selectViewState);
 
   vmState$ = combineLatest([

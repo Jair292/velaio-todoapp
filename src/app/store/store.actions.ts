@@ -26,3 +26,11 @@ export const listActions = createActionGroup({
     'Change Page': props<{ page: number, pageSize?: number }>(), // success and error handled by getToDos
   }
 });
+
+export const skillsActions = createActionGroup({
+  source: '[Skills]',
+  events: {
+    'Get Skills': emptyProps(),
+    'Get Skills Success': props<{ skills: string[] }>()
+  }
+});

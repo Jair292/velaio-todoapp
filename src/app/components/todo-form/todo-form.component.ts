@@ -2,7 +2,6 @@ import { ChangeDetectionStrategy, Component, inject, ViewChild } from '@angular/
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroupDirective, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ButtonDirective } from 'src/app/directives/button.directive';
-import { ToDosService } from 'src/app/services/todos.service';
 import { PersonsComponent } from '../form-components/persons/persons.component';
 import { FORM_SUBMIT_TOKEN } from 'src/app/helpers/common';
 import { Subject } from 'rxjs';
@@ -24,7 +23,6 @@ import * as storeActions from 'src/app/store/store.actions';
 })
 export class TodoFormComponent {
   fb = inject(FormBuilder);
-  toDosService = inject(ToDosService);
   submitedTrigger$ = new Subject<void>();
   store = inject(Store<ToDosState>);
 
@@ -33,7 +31,7 @@ export class TodoFormComponent {
   todoForm = this.createForm();
 
   ngOnInit() {
-    this.toDosService.requestSkills().subscribe();
+    this.store.dispatch(storeActions.skillsActions.getSkills());
   }
 
   createForm() {

@@ -3,9 +3,12 @@ import { FormControl, Validators } from '@angular/forms';
 import { commonImports, FormFields, viewProviders } from 'src/app/directives/form-fields.directive';
 import { CustomValidators } from 'src/app/from-validators/validators';
 import { ButtonDirective } from 'src/app/directives/button.directive';
-import { ToDosService } from 'src/app/services/todos.service';
 import { trackByFn } from 'src/app/helpers/common';
 import { takeUntil, tap } from 'rxjs';
+import { Store } from '@ngrx/store';
+import { ToDosState } from 'src/app/store/store.reducers';
+import { selectSkills } from 'src/app/store/store.selectors';
+
 
 @Component({
   selector: 'app-skills',
@@ -17,7 +20,8 @@ import { takeUntil, tap } from 'rxjs';
   viewProviders: [...viewProviders]
 })
 export class SkillsComponent extends FormFields {
-  skillList$ = inject(ToDosService).skills$;
+  store = inject(Store<ToDosState>);
+  skillList$ = this.store.select(selectSkills);
   skills = this.createSkills();
   trackByFn = trackByFn;
 

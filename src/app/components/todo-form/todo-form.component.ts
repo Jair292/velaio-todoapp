@@ -7,6 +7,9 @@ import { PersonsComponent } from '../form-components/persons/persons.component';
 import { FORM_SUBMIT_TOKEN } from 'src/app/helpers/common';
 import { Subject } from 'rxjs';
 import { ToDo } from 'src/app/models/todo';
+import { Store } from '@ngrx/store';
+import { ToDosState } from 'src/app/store/store.reducers';
+import * as storeActions from 'src/app/store/store.actions';
 
 @Component({
   selector: 'app-todo-form',
@@ -23,6 +26,7 @@ export class TodoFormComponent {
   fb = inject(FormBuilder);
   toDosService = inject(ToDosService);
   submitedTrigger$ = new Subject<void>();
+  store = inject(Store<ToDosState>);
 
   @ViewChild(FormGroupDirective) formDir!: FormGroupDirective;
 
@@ -43,7 +47,8 @@ export class TodoFormComponent {
     if (this.todoForm.invalid) {
       return;
     }
-    this.toDosService.addToDo(this.todoForm.value as Partial<ToDo>).subscribe();
+    // this.toDosService.addToDo(this.todoForm.value as Partial<ToDo>).subscribe();
+    this.store.dispatch(storeActions.toDosActions.addToDo({ toDo: this.todoForm.value as Partial<ToDo> }));
     this.submitedTrigger$.next();
     this.formDir.resetForm();
   }

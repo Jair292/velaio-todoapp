@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { ToDo } from '../models/todo';
-import { BehaviorSubject, delay, map, Observable, tap } from 'rxjs';
+import { BehaviorSubject, Observable, tap } from 'rxjs';
 
 export type FilterValueStatus = ToDo['status'] | 'all';
 export type ResponseStatus = {
@@ -18,12 +18,8 @@ export type RequestToDos = {
 export class ToDosService {
   #http = inject(HttpClient);
 
-  #todos = new BehaviorSubject<ToDo[]>([]);
-  todos$: Observable<ToDo[]> = this.#todos.asObservable();
-  // todos$: Observable<ToDo[]> = this.#todos.pipe(delay(3000), map(() => {throw 'error';}));
   #skills = new BehaviorSubject<string[]>([]);
   skills$: Observable<string[]> = this.#skills.asObservable();
-  totalPages$ = new BehaviorSubject<number>(1);
 
   requestToDos(status: FilterValueStatus = 'all', page: number, pageSize: number = 10) {
     return this.#http.get<RequestToDos>(`/api/todos?status=${status}&page=${page}&pageSize=${pageSize}`);
@@ -41,7 +37,7 @@ export class ToDosService {
       throw new Error('Missing required properties to create a new ToDo');
     }
 
-    const newToDo: Partial<ToDo> = {
+    const newToDo: Omit<ToDo, 'id'> = {
       name: todo.name,
       persons: todo.persons,
       endDate: todo.endDate,

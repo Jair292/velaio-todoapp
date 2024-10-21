@@ -8,8 +8,6 @@ type Pagination = ToDosState['pagination'];
 export const toDosActions = createActionGroup({
   source: '[ToDo]',
   events: {
-    'Get ToDos': emptyProps(),
-    'Get ToDos Success': props<{ toDos: ToDo[], status: FilterValueStatus, pagination: Pagination }>(),
     'Add ToDo': props<{ toDo: Partial<ToDo> }>(),
     'Add ToDo Success': props<{ status: unknown }>(),
     'Add ToDo Failure': props<{ status: unknown }>(),
@@ -22,9 +20,10 @@ export const toDosActions = createActionGroup({
 export const listActions = createActionGroup({
   source: '[ToDo]',
   events: {
-    'Filter ToDos': props<{ filterValue: FilterValueStatus, page: 1, pageSize?: number }>(), // success and error handled by getToDos
-    'Change Page': props<{ page: number, pageSize?: number }>(), // success and error handled by getToDos
-    'Change List Loading Mode': props<{ listLoadingMode:  ListLoadingMode }>()
+    'Get Filtered ToDos': props<{ filterValue: FilterValueStatus, page: 1, pageSize?: number, reset?: boolean }>(), // success and error handled by getToDos
+    'Get ToDos Page': props<{ page: number, pageSize?: number }>(), // success and error handled by getToDos
+    'Update List Loading Mode': props<{ listLoadingMode:  ListLoadingMode, reset?: boolean }>(),
+    'Get ToDos Success': props<{ toDos: ToDo[], status: FilterValueStatus, pagination: Pagination, reset: boolean }>(),
   }
 });
 

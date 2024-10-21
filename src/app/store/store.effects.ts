@@ -12,10 +12,9 @@ export const getToDos = createEffect(
   (actions$ = inject(Actions), toDoService = inject(ToDosService), store = inject(Store<AppState>)) => {
     return actions$.pipe(
       ofType(
-        storeActions.toDosActions.getToDos,
-        storeActions.listActions.changePage,
-        storeActions.listActions.filterToDos,
-        storeActions.listActions.changeListLoadingMode
+        storeActions.listActions.getToDosPage,
+        storeActions.listActions.getFilteredToDos,
+        storeActions.listActions.updateListLoadingMode
       ),
       withLatestFrom(
         store.select(todoSelectors.selectFilters),
@@ -24,13 +23,15 @@ export const getToDos = createEffect(
       ),
       switchMap(([action, filters, page, pageSize]) => {
         const f = "filterValue" in action ? action.filterValue : filters.status;
-        const p = "page" in action ? action.page : page;
         const pS = "pageSize" in action ? action.pageSize : pageSize;
+        const p = "page" in action ? action.page : page;
+        const reset = "reset" in action ? true : false;
         return toDoService.requestToDos(f, p, pS).pipe(
           map((requestResponse: RequestToDos) =>
-            storeActions.toDosActions.getToDosSuccess({
+            storeActions.listActions.getToDosSuccess({
               toDos: requestResponse.data,
               status: f,
+              reset,
               pagination: {
                 page: requestResponse.pagination.page,
                 pageSize: requestResponse.pagination.pageSize,

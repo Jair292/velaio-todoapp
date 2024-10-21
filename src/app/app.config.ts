@@ -5,11 +5,7 @@ import {
   provideZoneChangeDetection,
 } from "@angular/core";
 import { provideRouter } from "@angular/router";
-
-import {
-  provideHttpClient,
-  withInterceptorsFromDi,
-} from "@angular/common/http";
+import { provideHttpClient } from "@angular/common/http";
 import { routes } from "./app.routes";
 import { HttpClientInMemoryWebApiModule } from "angular-in-memory-web-api";
 import { InmemoryService } from "./services/inmemory.service";

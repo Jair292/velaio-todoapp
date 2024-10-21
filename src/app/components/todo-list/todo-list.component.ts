@@ -6,11 +6,10 @@ import { ToDoFilterPipe } from 'src/app/pipes/todofilter.pipe';
 import { FilterValueStatus, ToDosService } from 'src/app/services/todos.service';
 import { ButtonDirective } from 'src/app/directives/button.directive';
 import { FormsModule } from '@angular/forms';
-import { combineLatest, map } from 'rxjs';
 import { PaginatorComponent } from '../paginator/paginator.component';
 import { Store } from '@ngrx/store';
 import * as storeActions from '../../store/store.actions';
-import { selectFilters, selectPagination, selectTodos, selectViewState } from 'src/app/store/store.selectors';
+import { selectForToDoList } from 'src/app/store/store.selectors';
 import { ListLoadingMode, StatePagination, ToDosState } from 'src/app/store/store.reducers';
 import { InfiniteScrollDirective } from 'ngx-infinite-scroll';
 
@@ -34,34 +33,10 @@ export class TodoListComponent implements OnInit {
   toDosService = inject(ToDosService);
   #er = inject(ElementRef);
   store = inject(Store<ToDosState>);
-  todos$ = this.store.select(selectTodos);
-  filters$ = this.store.select(selectFilters);
-  pagination$ = this.store.select(selectPagination);
-  viewState$ = this.store.select(selectViewState);
-
-  vmState$ = combineLatest([
-    this.todos$,
-    this.filters$,
-    this.viewState$,
-    this.pagination$,
-  ]).pipe(
-    map(
-      ([
-        todos,
-        filters,
-        viewState,
-        pagination
-      ]) => ({
-        todos,
-        filters,
-        viewState,
-        pagination
-      })
-    )
-  );
+  vmState$ = this.store.select(selectForToDoList);
 
   ngOnInit() {
-    this.store.dispatch(storeActions.toDosActions.getToDos());
+    this.store.dispatch(storeActions.listActions.getToDosPage({ page: 1 }));
   }
 
   displayToDoIndex(i: number, page: number, mode: ListLoadingMode) {
@@ -70,7 +45,7 @@ export class TodoListComponent implements OnInit {
   }
 
   changePage(page: number) {
-    this.store.dispatch(storeActions.listActions.changePage({ page }));
+    this.store.dispatch(storeActions.listActions.getToDosPage({ page }));
     this.#er.nativeElement.scrollIntoView({ behavior: "smooth" });
   }
 
@@ -79,7 +54,7 @@ export class TodoListComponent implements OnInit {
   }
 
   updateFilterValue(value: FilterValueStatus) {
-    this.store.dispatch(storeActions.listActions.filterToDos({ filterValue: value, page: 1 }));
+    this.store.dispatch(storeActions.listActions.getFilteredToDos({ filterValue: value, page: 1, reset: true }));
   }
 
   changeStatus(toDo: ToDo) {
@@ -96,11 +71,11 @@ export class TodoListComponent implements OnInit {
 
   changeLoadingMode(currentLoadingMode: ListLoadingMode) {
     const loadingMode = currentLoadingMode == 'pagination' ? 'infinite-scrolling' : 'pagination';
-    this.store.dispatch(storeActions.listActions.changeListLoadingMode({ listLoadingMode: loadingMode }));
+    this.store.dispatch(storeActions.listActions.updateListLoadingMode({ listLoadingMode: loadingMode, reset: true }));
   }
 
   onScrollDown(config: StatePagination) {
-    this.store.dispatch(storeActions.listActions.changePage({...config, page: config.page + 1}));
+    this.store.dispatch(storeActions.listActions.getToDosPage({...config, page: config.page + 1}));
   }
 
   trackByFn(index: number, item: ToDo | Person | string): number | string {

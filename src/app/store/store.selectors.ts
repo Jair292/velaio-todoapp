@@ -1,3 +1,4 @@
+import { createSelector, select } from "@ngrx/store";
 import { ToDosState } from "./store.reducers";
 
 export interface AppState {
@@ -25,3 +26,19 @@ export const selectPagesCount = (state: AppState) => state.appState.pagination.p
 
 // Errors
 export const selectErrors = (state: AppState) => state.appState.errors;
+
+// components selectors
+export const selectForToDoList = createSelector(
+  selectTodos,
+  selectViewState,
+  selectPagination,
+  selectFilters,
+  (todos, viewState, pagination, filters) => {
+    return {
+      todos,
+      viewState,
+      pagination,
+      filters
+    }
+  }
+)

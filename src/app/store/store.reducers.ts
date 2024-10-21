@@ -3,6 +3,23 @@ import { ToDo } from "../models/todo";
 import * as storeActions from "./store.actions";
 import { FilterValueStatus } from "../services/todos.service";
 
+export type ListLoadingMode = 'infinite-scrolling' | 'pagination';
+
+export type StatePagination = {
+  page: number;
+  pageSize: number;
+  pagesCount: number;
+}
+
+const buildToDos = (currentToDos: ToDo[], newToDos: ToDo[], config: { mode: ListLoadingMode }) => {
+  switch (config.mode) {
+    case 'infinite-scrolling':
+      return [...currentToDos, ...newToDos];
+    case 'pagination':
+      return newToDos;
+  }
+}
+
 export interface ToDosState {
   data: {
     toDos: ToDo[];
@@ -16,12 +33,9 @@ export interface ToDosState {
     updatingToDo: boolean;
     filteringToDos: boolean;
     changinPageToDos: boolean;
+    listLoadingMode: ListLoadingMode;
   },
-  pagination: {
-    page: number;
-    pageSize: number;
-    pagesCount: number;
-  },
+  pagination: StatePagination,
   errors: {
     [key: string]: unknown;
   }
@@ -39,7 +53,8 @@ export const initialState: ToDosState = {
     loadingToDos: true,
     updatingToDo: false,
     filteringToDos: false,
-    changinPageToDos: false
+    changinPageToDos: false,
+    listLoadingMode: 'pagination'
   },
   pagination: {
     page: 1,
@@ -83,7 +98,7 @@ export const todosReducer = createReducer(
       ...state,
       data: {
         ...state.data,
-        toDos
+        toDos: buildToDos(state.data.toDos, toDos, { mode: state.viewState.listLoadingMode })
       },
       filters: {
         ...state.filters,
@@ -134,6 +149,15 @@ export const todosReducer = createReducer(
       data: {
         ...state.data,
         skills
+      }
+    }
+  }),
+  on(storeActions.listActions.changeListLoadingMode, (state, { listLoadingMode }) => {
+    return {
+      ...state,
+      viewState: {
+        ...state.viewState,
+        listLoadingMode
       }
     }
   })

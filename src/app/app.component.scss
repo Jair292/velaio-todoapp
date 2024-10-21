@@ -9,9 +9,11 @@
   font-family: $font-family;
   color: $font-color;
   padding: $padding;
-  overflow: scroll;
+  overflow: hidden;
   margin: 30px;
   border-radius: $border-radius;
+  max-height: 90vh;
+  height: 100%;
 }
 
 .host-header {
@@ -20,4 +22,9 @@
 
 main {
   width: 100%;
+  flex-grow: 1;
+  display: flex;
+  justify-content: flex-start;
+  flex-flow: column;
+  overflow: hidden;
 }

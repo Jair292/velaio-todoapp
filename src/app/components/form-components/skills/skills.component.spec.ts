@@ -2,8 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormGroup, ReactiveFormsModule, ControlContainer, FormGroupDirective } from '@angular/forms';
 import { SkillsComponent } from './skills.component';
 import { of, Subject } from 'rxjs';
-import { ChangeDetectorRef } from '@angular/core';
-import { FORM_TOKEN } from 'src/app/helpers/common';
+import { FORM_SUBMIT_TOKEN } from 'src/app/helpers/common';
 import { ToDosService } from 'src/app/services/todos.service';
 
 describe('SkillsComponent', () => {
@@ -27,8 +26,7 @@ describe('SkillsComponent', () => {
       providers: [
         { provide: ControlContainer, useValue: formGroupDirective },
         { provide: ToDosService, useValue: mockToDosService },
-        { provide: FORM_TOKEN, useValue: mockFormToken },
-        { provide: ChangeDetectorRef, useValue: { markForCheck: () => {} } }
+        { provide: FORM_SUBMIT_TOKEN, useValue: mockFormToken },
       ]
     }).compileComponents();
   });

@@ -11,35 +11,36 @@ import { SkillsService } from "../services/skills.service";
 export const getToDos = createEffect(
   (actions$ = inject(Actions), toDoService = inject(ToDosService), store = inject(Store<AppState>)) => {
     return actions$.pipe(
-      ofType(storeActions.toDosActions.getToDos, storeActions.listActions.changePage, storeActions.listActions.filterToDos),
+      ofType(
+        storeActions.toDosActions.getToDos,
+        storeActions.listActions.changePage,
+        storeActions.listActions.filterToDos,
+      ),
       withLatestFrom(
         store.select(todoSelectors.selectFilters),
         store.select(todoSelectors.selectPage),
         store.select(todoSelectors.selectPageSize)
       ),
       switchMap(([action, filters, page, pageSize]) => {
-        const f = 'filterValue' in action ? action.filterValue : filters.status;
-        const p = 'page' in action ?action.page : page;
-        const pS = 'pageSize' in action ? action.pageSize : pageSize;
-        return toDoService
-          .requestToDos(f, p, pS)
-          .pipe(
-            map((requestResponse: RequestToDos) =>
-              storeActions.toDosActions.getToDosSuccess({
-                toDos: requestResponse.data,
-                status: f,
-                pagination: {
-                  page: requestResponse.pagination.page,
-                  pageSize: requestResponse.pagination.pageSize,
-                  pagesCount: requestResponse.pagination.pagesCount
-                }
-              })
-            ),
-            catchError(() => EMPTY) // TODO: add error handle fn
-          )
-        }
-      )
-    )
+        const f = "filterValue" in action ? action.filterValue : filters.status;
+        const p = "page" in action ? action.page : page;
+        const pS = "pageSize" in action ? action.pageSize : pageSize;
+        return toDoService.requestToDos(f, p, pS).pipe(
+          map((requestResponse: RequestToDos) =>
+            storeActions.toDosActions.getToDosSuccess({
+              toDos: requestResponse.data,
+              status: f,
+              pagination: {
+                page: requestResponse.pagination.page,
+                pageSize: requestResponse.pagination.pageSize,
+                pagesCount: requestResponse.pagination.pagesCount,
+              },
+            })
+          ),
+          catchError(() => EMPTY ) // TODO: add error handle fn
+        );
+      })
+    );
   },
   { functional: true }
 );

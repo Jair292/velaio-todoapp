@@ -9,13 +9,14 @@
         <input type="radio" name="filter" id="filter-closed" value="closed" (change)="updateFilterValue('closed')"><label for="filter-closed">Closed</label>
       </div>
     </div>
-    <div class="todos-container" [class.disabled]="disableToDosContainer(vm.viewState)">
+    <div infiniteScroll [infiniteScrollDistance]="2" [infiniteScrollThrottle]="50" [scrollWindow]="false"
+      (scrolled)="vm.viewState.listLoadingMode == 'infinite-scrolling' && onScrollDown(vm.pagination)" class="todos-container" [class.disabled]="disableToDosContainer(vm.viewState)">
       <ng-container *ngIf="vm.todos as ToDos">
         <div *ngIf="ToDos.length == 0" class="no-todos">
           No ToDos
         </div>
         <div class="todo" *ngFor="let todo of ToDos; let i = index; trackBy: trackByFn">
-          <span class="todo-title">{{displayToDoIndex(i, vm.pagination.page)}}.
+          <span class="todo-title">{{displayToDoIndex(i, vm.pagination.page, vm.viewState.listLoadingMode)}}.
             <input type="checkbox" (click)="changeStatus(todo)" [checked]="getStatusForCheckbox(todo.status)"/> {{todo.name | titlecase}} - {{todo.endDate | date}}</span>
           <span class="todo-sub-title">Associated people:</span>
           <div class="person-container" *ngFor="let person of todo.persons; let j = index; trackBy: trackByFn">
@@ -29,7 +30,7 @@
         </div>
       </ng-container>
     </div>
-    <div class="pagination">
+    <div *ngIf="vm.viewState.listLoadingMode == 'pagination'" class="pagination">
       <app-paginator [page]="vm.pagination.page" [totalPages]="vm.pagination.pagesCount" (pageChanged)="changePage($event)"></app-paginator>
     </div>
   </ng-container>

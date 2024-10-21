@@ -1,6 +1,6 @@
 import { createActionGroup, emptyProps, props } from "@ngrx/store";
 import { ToDo } from "../models/todo";
-import { ToDosState } from "./store.reducers";
+import { ListLoadingMode, ToDosState } from "./store.reducers";
 import { FilterValueStatus } from "../services/todos.service";
 
 type Pagination = ToDosState['pagination'];
@@ -24,6 +24,7 @@ export const listActions = createActionGroup({
   events: {
     'Filter ToDos': props<{ filterValue: FilterValueStatus, page: 1, pageSize?: number }>(), // success and error handled by getToDos
     'Change Page': props<{ page: number, pageSize?: number }>(), // success and error handled by getToDos
+    'Change List Loading Mode': props<{ listLoadingMode:  ListLoadingMode }>()
   }
 });
 

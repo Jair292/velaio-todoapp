@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, ElementRef, inject, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ElementRef, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Person, ToDo } from 'src/app/models/todo';
 import { LoaderComponent } from '../loader/loader.component';
@@ -6,12 +6,13 @@ import { ToDoFilterPipe } from 'src/app/pipes/todofilter.pipe';
 import { FilterValueStatus, ToDosService } from 'src/app/services/todos.service';
 import { ButtonDirective } from 'src/app/directives/button.directive';
 import { FormsModule } from '@angular/forms';
-import { combineLatest, map, Subject } from 'rxjs';
+import { combineLatest, map } from 'rxjs';
 import { PaginatorComponent } from '../paginator/paginator.component';
 import { Store } from '@ngrx/store';
 import * as storeActions from '../../store/store.actions';
 import { selectFilters, selectPagination, selectTodos, selectViewState } from 'src/app/store/store.selectors';
-import { ToDosState } from 'src/app/store/store.reducers';
+import { ListLoadingMode, StatePagination, ToDosState } from 'src/app/store/store.reducers';
+import { InfiniteScrollDirective } from 'ngx-infinite-scroll';
 
 @Component({
   selector: "app-todo-list",
@@ -23,14 +24,14 @@ import { ToDosState } from 'src/app/store/store.reducers';
     ButtonDirective,
     FormsModule,
     PaginatorComponent,
+    InfiniteScrollDirective
   ],
   templateUrl: "./todo-list.component.html",
   styleUrls: ["./todo-list.component.scss"],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class TodoListComponent implements OnInit, OnDestroy {
+export class TodoListComponent implements OnInit {
   toDosService = inject(ToDosService);
-  destroy$ = new Subject<void>();
   #er = inject(ElementRef);
   store = inject(Store<ToDosState>);
   todos$ = this.store.select(selectTodos);
@@ -63,11 +64,8 @@ export class TodoListComponent implements OnInit, OnDestroy {
     this.store.dispatch(storeActions.toDosActions.getToDos());
   }
 
-  ngOnDestroy() {
-    this.destroy$.next();
-  }
-
-  displayToDoIndex(i: number, page: number) {
+  displayToDoIndex(i: number, page: number, mode: ListLoadingMode) {
+    if (mode == 'infinite-scrolling') return i + 1;
     return i + 1 + (page - 1) * 10;
   }
 
@@ -94,6 +92,10 @@ export class TodoListComponent implements OnInit, OnDestroy {
 
   disableToDosContainer(viewState: ToDosState["viewState"]) {
     return viewState.updatingToDo || viewState.filteringToDos || viewState.changinPageToDos
+  }
+
+  onScrollDown(config: StatePagination) {
+    this.store.dispatch(storeActions.listActions.changePage({...config, page: config.page + 1}));
   }
 
   trackByFn(index: number, item: ToDo | Person | string): number | string {

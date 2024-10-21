@@ -2,7 +2,7 @@ import { inject } from "@angular/core";
 import { Actions, createEffect, ofType } from "@ngrx/effects";
 import { RequestToDos, ResponseStatus, ToDosService } from "../services/todos.service";
 import * as storeActions from "./store.actions";
-import { catchError, EMPTY, exhaustMap, map, switchMap, withLatestFrom } from "rxjs";
+import { catchError, EMPTY, exhaustMap, map, withLatestFrom } from "rxjs";
 import { Store } from "@ngrx/store";
 import { AppState } from "./store.selectors";
 import * as todoSelectors from "./store.selectors";
@@ -28,7 +28,7 @@ export const getToDos = createEffect(
         const reset = "reset" in action ? true : false;
         return toDoService.requestToDos(f, p, pS).pipe(
           map((requestResponse: RequestToDos) =>
-            storeActions.listActions.getToDosSuccess({
+            storeActions.listActions.getToDosPageSuccess({
               toDos: requestResponse.data,
               status: f,
               reset,

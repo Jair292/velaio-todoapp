@@ -70,7 +70,7 @@ export class TodoListComponent implements OnInit {
   }
 
   disableToDosContainer(viewState: ToDosState["viewState"]) {
-    return viewState.updatingToDo || viewState.filteringToDos || viewState.changinPageToDos
+    return viewState.updatingToDo || viewState.loadingToDos
   }
 
   changeLoadingMode(currentLoadingMode: ListLoadingMode) {
@@ -83,8 +83,8 @@ export class TodoListComponent implements OnInit {
   }
 
   trackByFn(index: number, item: ToDo | Person | string): number | string {
-    if (typeof item === "string") {
-      return item;
+    if (typeof item == "string") {
+      return index;
     } else if ("id" in item) {
       return item.id;
     } else if ("name" in item) {

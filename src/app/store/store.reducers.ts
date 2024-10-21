@@ -27,10 +27,9 @@ export interface ToDosState {
     status: FilterValueStatus
   },
   viewState: {
+    loadingToDosInitial: boolean
     loadingToDos: boolean;
     updatingToDo: boolean;
-    filteringToDos: boolean;
-    changinPageToDos: boolean;
     listLoadingMode: ListLoadingMode;
   },
   pagination: StatePagination,
@@ -54,10 +53,9 @@ export const initialState: ToDosState = {
     status: 'all',
   },
   viewState: {
-    loadingToDos: true,
+    loadingToDosInitial: true,
     updatingToDo: false,
-    filteringToDos: false,
-    changinPageToDos: false,
+    loadingToDos: false,
     listLoadingMode: 'pagination'
   },
   pagination: paginationInitialState,
@@ -66,12 +64,16 @@ export const initialState: ToDosState = {
 
 export const todosReducer = createReducer(
   initialState,
-  on(storeActions.listActions.getToDosPage, (state) => {
+  on(storeActions.listActions.getToDosPage, (state, { page }) => {
     return {
       ...state,
       viewState: {
         ...state.viewState,
-        changinPageToDos: true
+        loadingToDos: true
+      },
+      pagination: {
+        ...state.pagination,
+        page
       }
     }
   }),
@@ -80,11 +82,11 @@ export const todosReducer = createReducer(
       ...state,
       viewState: {
         ...state.viewState,
-        filteringToDos: true
+        loadingToDos: true
       }
     }
   }),
-  on(storeActions.listActions.getToDosSuccess, (state, { toDos, status, pagination, reset }) => {
+  on(storeActions.listActions.getToDosPageSuccess, (state, { toDos, status, pagination, reset }) => {
     return {
       ...state,
       data: {
@@ -98,8 +100,7 @@ export const todosReducer = createReducer(
       viewState: {
         ...state.viewState,
         loadingToDos: false,
-        filteringToDos: false,
-        changinPageToDos: false
+        loadingToDosInitial: false
       },
       pagination: {
         ...state.pagination,
@@ -125,15 +126,6 @@ export const todosReducer = createReducer(
       }
     }
   }),
-  on(storeActions.listActions.getToDosPage, (state, { page }) => {
-    return {
-      ...state,
-      pagination: {
-        ...state.pagination,
-        page
-      }
-    }
-  }),
   on(storeActions.skillsActions.getSkillsSuccess, (state, { skills }) => {
     return {
       ...state,
@@ -149,7 +141,7 @@ export const todosReducer = createReducer(
       pagination: paginationInitialState,
       viewState: {
         ...state.viewState,
-        filteringToDos: true,
+        loadingToDos: true,
         listLoadingMode
       }
     }

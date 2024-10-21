@@ -14,9 +14,9 @@ export const selectFilters = (state: AppState) => state.appState.filters;
 
 // View State
 export const selectViewState = (state: AppState) => state.appState.viewState;
+export const selectLoadingToDosInitial = (state: AppState) => state.appState.viewState.loadingToDosInitial;
 export const selectLoadingToDos = (state: AppState) => state.appState.viewState.loadingToDos;
 export const selectUpdatingToDo = (state: AppState) => state.appState.viewState.updatingToDo;
-export const selectFilteringToDos = (state: AppState) => state.appState.viewState.filteringToDos;
 
 // Pagination
 export const selectPagination = (state: AppState) => state.appState.pagination;

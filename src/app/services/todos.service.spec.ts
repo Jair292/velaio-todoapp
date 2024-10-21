@@ -1,8 +1,9 @@
 import { TestBed } from '@angular/core/testing';
-import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
+import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { ToDosService } from './todos.service';
 import { ToDo } from '../models/todo';
 import { skip, take } from 'rxjs';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 
 describe('ToDosService', () => {
   let service: ToDosService;
@@ -10,9 +11,9 @@ describe('ToDosService', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [HttpClientTestingModule],
-      providers: [ToDosService]
-    });
+    imports: [],
+    providers: [ToDosService, provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()]
+});
 
     service = TestBed.inject(ToDosService);
     httpMock = TestBed.inject(HttpTestingController);

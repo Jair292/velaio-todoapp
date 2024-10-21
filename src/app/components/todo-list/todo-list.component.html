@@ -2,16 +2,20 @@
   <h1>ToDo List</h1>
   @if (!vm.viewState.loadingToDos) {
     <div class="actions">
-      <div class="filter">
-        <span>Filter:</span>
+      <div class="action">
+        <span class="title">Filter:</span>
         <input type="radio" name="filter" id="filter-all" [value]="undefined" checked (change)="updateFilterValue('all')"><label for="filter-all">All</label>
         <input type="radio" name="filter" id="filter-open" value="open" (change)="updateFilterValue('open')"><label for="filter-open">Open</label>
         <input type="radio" name="filter" id="filter-closed" value="closed" (change)="updateFilterValue('closed')"><label for="filter-closed">Closed</label>
+      </div>
+      <div class="action">
+        <span class="title">Config:</span>
         <input type="checkbox" name="infiniteScroll" id="infiniteScroll" (change)="changeLoadingMode(vm.viewState.listLoadingMode)" ><label for="infiniteScroll">Inifinite Scroll</label>
       </div>
     </div>
-    <div infiniteScroll [infiniteScrollDistance]="2" [infiniteScrollThrottle]="50" [scrollWindow]="false"
-      (scrolled)="vm.viewState.listLoadingMode == 'infinite-scrolling' && onScrollDown(vm.pagination)" class="todos-container" [class.disabled]="disableToDosContainer(vm.viewState)">
+    <div #list infiniteScroll [infiniteScrollDistance]="2" [infiniteScrollThrottle]="50" [scrollWindow]="false"
+      (scrolled)="vm.viewState.listLoadingMode == 'infinite-scrolling' && onScrollDown(vm.pagination)"
+      class="todos-container" [class.disabled]="disableToDosContainer(vm.viewState)">
       <ng-container *ngIf="vm.todos as ToDos">
         <div *ngIf="ToDos.length == 0" class="no-todos">
           No ToDos
@@ -20,14 +24,16 @@
           <span class="todo-title">{{displayToDoIndex(i, vm.pagination.page, vm.viewState.listLoadingMode)}}.
             <input type="checkbox" (click)="changeStatus(todo)" [checked]="getStatusForCheckbox(todo.status)"/> {{todo.name | titlecase}} - {{todo.endDate | date}}</span>
           <span class="todo-sub-title">Associated people:</span>
-          <div class="person-container" *ngFor="let person of todo.persons; let j = index; trackBy: trackByFn">
-            <span class="person-name">- {{person.name}} ({{person.age}})</span>
-            <span class="person-skills">
-              Skills: <ng-container *ngFor="let skill of person.skills; let k = index; trackBy: trackByFn">
-                {{skill}}
-              </ng-container>
-            </span>
-          </div>
+          @for (person of todo.persons; let j = $index; track trackByFn) {
+            <div class="person-container">
+              <span class="person-name">- {{person.name}} ({{person.age}})</span>
+              <span class="person-skills">
+                -- Skills: @for (skill of person.skills; let k = $index; track trackByFn) {
+                  {{skill}}
+                }
+              </span>
+            </div>
+          }
         </div>
       </ng-container>
     </div>

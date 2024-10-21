@@ -21,14 +21,27 @@
 
   .actions {
     display: flex;
+    flex-flow: column;
     justify-content: flex-start;
+    align-items: flex-start;
     padding: variables.$padding;
     border: variables.$border-color 1px solid;
     border-radius: variables.$border-radius;
     margin-bottom: variables.$margin;
+    font-size: variables.$font-size-small;
 
-    span, label {
-      margin-right: variables.$margin;
+    .action {
+      display: flex;
+      align-items: center;
+      &:not(:last-child) {
+        margin-bottom: variables.$margin;
+      }
+      .title {
+        font-weight: bold;
+      }
+      span, label {
+        margin-right: variables.$margin;
+      }
     }
   }
 
@@ -67,6 +80,10 @@
       .person-name, .person-skills {
         padding: variables.$padding;
         font-size: variables.$font-size-small;
+      }
+
+      .person-skills {
+        padding-top: 0;
       }
 
       .person-container {

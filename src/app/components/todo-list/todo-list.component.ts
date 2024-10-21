@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, ElementRef, inject, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ElementRef, inject, OnInit, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Person, ToDo } from 'src/app/models/todo';
 import { LoaderComponent } from '../loader/loader.component';
@@ -30,8 +30,9 @@ import { InfiniteScrollDirective } from 'ngx-infinite-scroll';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TodoListComponent implements OnInit {
+  @ViewChild('list') list!: ElementRef;
+
   toDosService = inject(ToDosService);
-  #er = inject(ElementRef);
   store = inject(Store<ToDosState>);
   vmState$ = this.store.select(selectForToDoList);
 
@@ -46,7 +47,10 @@ export class TodoListComponent implements OnInit {
 
   changePage(page: number) {
     this.store.dispatch(storeActions.listActions.getToDosPage({ page }));
-    this.#er.nativeElement.scrollIntoView({ behavior: "smooth" });
+    this.list.nativeElement.scrollTo({
+      behavior: "smooth",
+      top: 0,
+    })
   }
 
   getStatusForCheckbox(status: ToDo["status"]): boolean {

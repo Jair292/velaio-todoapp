@@ -49,7 +49,7 @@ export class InmemoryService implements InMemoryDbService {
             {
               name: `${faker.person.firstName()} ${faker.person.lastName()}`,
               age: faker.number.int({min: 18, max: 45}),
-              skills: [faker.helpers.arrayElement(skillsList)]
+              skills: [faker.helpers.arrayElement(skillsList), faker.helpers.arrayElement(skillsList), faker.helpers.arrayElement(skillsList)]
             }
           ]
         }

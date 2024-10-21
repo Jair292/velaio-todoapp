@@ -1,6 +1,6 @@
-<ng-container *ngIf="vmState$ |async as vm">
+@if (vmState$ | async; as vm) {
   <h1>ToDo List</h1>
-  <ng-container *ngIf="!vm.viewState.loadingToDos else loading">
+  @if (!vm.viewState.loadingToDos) {
     <div class="actions">
       <div class="filter">
         <span>Filter:</span>
@@ -34,9 +34,7 @@
     <div *ngIf="vm.viewState.listLoadingMode == 'pagination'" class="pagination">
       <app-paginator [page]="vm.pagination.page" [totalPages]="vm.pagination.pagesCount" (pageChanged)="changePage($event)"></app-paginator>
     </div>
-  </ng-container>
-</ng-container>
-
-<ng-template #loading>
-  <app-loader></app-loader>
-</ng-template>
+  } @else {
+    <app-loader></app-loader>
+  }
+}

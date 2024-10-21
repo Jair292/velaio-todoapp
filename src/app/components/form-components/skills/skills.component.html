@@ -1,7 +1,7 @@
 <fieldset>
   <legend>{{legend}}</legend>
   <div class="fields" [formArrayName]="formArrayName">
-    <ng-container *ngFor="let skill of skills.controls; trackBy: trackByFn; let i = index;">
+    @for (skill of skills.controls; track trackByFn; let i = $index) {
       <div class="content">
         <div class="list">
           <div class="field">
@@ -12,12 +12,12 @@
           <button type="button" size="small" [disabled]="skills.length <= 1" (click)="removeSkill(i)">-</button>
         </div>
       </div>
-    </ng-container>
-    <datalist id="skills">
-      <ng-container *ngFor="let skill of ( skillList$ | async ); let i = index">
-        <option [value]="skill">{{skill}}</option>
-      </ng-container>
-    </datalist>
+    }
   </div>
   <button type="button" [disabled]="skills.length > 2" (click)="addSkill()"> Add {{legend}}</button>
 </fieldset>
+<datalist id="skills">
+  @for (skill of (skillList$ | async); track skill) {
+    <option [value]="skill">{{skill}}</option>
+  }
+</datalist>

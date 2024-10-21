@@ -1,24 +1,26 @@
 <fieldset>
   <legend>{{legend}}</legend>
   <div class="fields" *ngIf="persons.length > 0" [formArrayName]="formArrayName">
-    <ng-container *ngFor="let person of persons.controls; trackBy: trackByFn; let i = index;" [formGroupName]="i">
-      <div class="content">
-        <div class="list">
-          <div class="field">
-            <label for="person-name-{{i}}">Full Name</label>
-            <input type="text" formControlName="name" id="person-name-{{i}}">
+    @for (person of persons.controls; track trackByFn; let i = $index) {
+      <ng-container [formGroupName]="i">
+        <div class="content">
+          <div class="list">
+            <div class="field">
+              <label for="person-name-{{i}}">Full Name</label>
+              <input type="text" formControlName="name" id="person-name-{{i}}">
+            </div>
+            <div class="field">
+              <label for="person-age-{{i}}">Age</label>
+              <input type="number" formControlName="age" id="person-age-{{i}}">
+            </div>
           </div>
-          <div class="field">
-            <label for="person-age-{{i}}">Age</label>
-            <input type="number" formControlName="age" id="person-age-{{i}}">
+          <div class="field-actions">
+            <button type="button" size="small" [disabled]="persons.length <= 1" (click)="removePerson(i)">-</button>
           </div>
         </div>
-        <div class="field-actions">
-          <button type="button" size="small" [disabled]="persons.length <= 1" (click)="removePerson(i)">-</button>
-        </div>
-      </div>
-      <app-skills *ngIf="withSkills" formArrayName="skills" legend="Skills"></app-skills>
-    </ng-container>
+        <app-skills *ngIf="withSkills" formArrayName="skills" legend="Skills"></app-skills>
+      </ng-container>
+    }
   </div>
   <button type="button" [disabled]="persons.length > 2" (click)="addPerson()"> Add {{legend}}</button>
 </fieldset>

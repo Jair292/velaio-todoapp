@@ -2,7 +2,7 @@ import { inject } from "@angular/core";
 import { Actions, createEffect, ofType } from "@ngrx/effects";
 import { RequestToDos, ResponseStatus, ToDosService } from "../services/todos.service";
 import * as storeActions from "./store.actions";
-import { catchError, EMPTY, map, switchMap, withLatestFrom } from "rxjs";
+import { catchError, EMPTY, exhaustMap, map, switchMap, withLatestFrom } from "rxjs";
 import { Store } from "@ngrx/store";
 import { AppState } from "./store.selectors";
 import * as todoSelectors from "./store.selectors";
@@ -21,7 +21,7 @@ export const getToDos = createEffect(
         store.select(todoSelectors.selectPage),
         store.select(todoSelectors.selectPageSize)
       ),
-      switchMap(([action, filters, page, pageSize]) => {
+      exhaustMap(([action, filters, page, pageSize]) => {
         const f = "filterValue" in action ? action.filterValue : filters.status;
         const pS = "pageSize" in action ? action.pageSize : pageSize;
         const p = "page" in action ? action.page : page;
@@ -51,7 +51,7 @@ export const addTodo = createEffect(
   (actions$ = inject(Actions), toDoService = inject(ToDosService)) => {
     return actions$.pipe(
       ofType(storeActions.toDosActions.addToDo),
-      switchMap((action) =>
+      exhaustMap((action) =>
         toDoService.addToDo(action.toDo).pipe(
           map((response: ResponseStatus) => storeActions.toDosActions.addToDoSuccess(response)),
           catchError(() => EMPTY) // TODO: add error handle fn
@@ -66,7 +66,7 @@ export const updateToDo = createEffect(
   (actions$ = inject(Actions), toDoService = inject(ToDosService)) => {
     return actions$.pipe(
       ofType(storeActions.toDosActions.updateToDo),
-      switchMap((action) =>
+      exhaustMap((action) =>
         toDoService.updateToDo(action.toDo).pipe(
           map((response: ResponseStatus) => storeActions.toDosActions.updateToDoSuccess(response)),
           catchError(() => EMPTY) // TODO: add error handle fn
@@ -81,7 +81,7 @@ export const getSkills = createEffect(
   (actions$ = inject(Actions), skillsService = inject(SkillsService)) => {
     return actions$.pipe(
       ofType(storeActions.skillsActions.getSkills),
-      switchMap(() =>
+      exhaustMap(() =>
         skillsService.requestSkills().pipe(
           map((response: string[]) => storeActions.skillsActions.getSkillsSuccess({ skills: response })),
           catchError(() => EMPTY) // TODO: add error handle fn

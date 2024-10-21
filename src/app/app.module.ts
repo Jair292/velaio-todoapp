@@ -25,7 +25,7 @@ import { provideStoreDevtools } from '@ngrx/store-devtools';
         provideStoreDevtools({
             maxAge: 25,
             logOnly: !isDevMode(),
-        }),
+        connectInZone: true}),
         provideHttpClient(withInterceptorsFromDi()),
     ] })
 export class AppModule { }

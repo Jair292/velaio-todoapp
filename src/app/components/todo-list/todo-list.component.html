@@ -7,6 +7,7 @@
         <input type="radio" name="filter" id="filter-all" [value]="undefined" checked (change)="updateFilterValue('all')"><label for="filter-all">All</label>
         <input type="radio" name="filter" id="filter-open" value="open" (change)="updateFilterValue('open')"><label for="filter-open">Open</label>
         <input type="radio" name="filter" id="filter-closed" value="closed" (change)="updateFilterValue('closed')"><label for="filter-closed">Closed</label>
+        <input type="checkbox" name="infiniteScroll" id="infiniteScroll" (change)="changeLoadingMode(vm.viewState.listLoadingMode)" ><label for="infiniteScroll">Inifinite Scroll</label>
       </div>
     </div>
     <div infiniteScroll [infiniteScrollDistance]="2" [infiniteScrollThrottle]="50" [scrollWindow]="false"

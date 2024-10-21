@@ -15,6 +15,7 @@ export const getToDos = createEffect(
         storeActions.toDosActions.getToDos,
         storeActions.listActions.changePage,
         storeActions.listActions.filterToDos,
+        storeActions.listActions.changeListLoadingMode
       ),
       withLatestFrom(
         store.select(todoSelectors.selectFilters),

@@ -41,6 +41,12 @@ export interface ToDosState {
   }
 }
 
+const paginationInitialState: StatePagination = {
+  page: 1,
+  pageSize: 10,
+  pagesCount: 1
+}
+
 export const initialState: ToDosState = {
   data: {
     toDos: [],
@@ -56,11 +62,7 @@ export const initialState: ToDosState = {
     changinPageToDos: false,
     listLoadingMode: 'pagination'
   },
-  pagination: {
-    page: 1,
-    pageSize: 10,
-    pagesCount: 1
-  },
+  pagination: paginationInitialState,
   errors: {}
 }
 
@@ -155,8 +157,14 @@ export const todosReducer = createReducer(
   on(storeActions.listActions.changeListLoadingMode, (state, { listLoadingMode }) => {
     return {
       ...state,
+      data: {
+        ...state.data,
+        toDos: []
+      },
+      pagination: paginationInitialState,
       viewState: {
         ...state.viewState,
+        filteringToDos: true,
         listLoadingMode
       }
     }

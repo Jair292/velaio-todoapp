@@ -94,6 +94,11 @@ export class TodoListComponent implements OnInit {
     return viewState.updatingToDo || viewState.filteringToDos || viewState.changinPageToDos
   }
 
+  changeLoadingMode(currentLoadingMode: ListLoadingMode) {
+    const loadingMode = currentLoadingMode == 'pagination' ? 'infinite-scrolling' : 'pagination';
+    this.store.dispatch(storeActions.listActions.changeListLoadingMode({ listLoadingMode: loadingMode }));
+  }
+
   onScrollDown(config: StatePagination) {
     this.store.dispatch(storeActions.listActions.changePage({...config, page: config.page + 1}));
   }

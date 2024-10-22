@@ -27,11 +27,10 @@
           <span class="todo-sub-title">Associated people:</span>
           @for (person of todo.persons; let j = $index; track trackByFn) {
             <div class="person-container">
-              <span class="person-name">- {{person.name}} ({{person.age}})</span>
+              <span class="person-name">{{person.name}} ({{person.age}})</span>
               <span class="person-skills">
-                -- Skills: @for (skill of person.skills; let k = $index; track trackByFn) {
-                  {{trackByFn(k, skill)}}
-                  {{skill}}
+                Skills: @for (skill of person.skills; let k = $index; track trackByFn) {
+                  <span class="chip">{{skill}}</span>
                 }
               </span>
             </div>

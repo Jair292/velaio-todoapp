@@ -2,7 +2,7 @@ import { inject } from "@angular/core";
 import { Actions, createEffect, ofType } from "@ngrx/effects";
 import { RequestToDos, ResponseStatus, ToDosService } from "../services/todos.service";
 import * as storeActions from "./store.actions";
-import { catchError, EMPTY, exhaustMap, map, withLatestFrom } from "rxjs";
+import { catchError, concatMap, EMPTY, exhaustMap, map, switchMap, withLatestFrom } from "rxjs";
 import { Store } from "@ngrx/store";
 import { AppState } from "./store.selectors";
 import * as todoSelectors from "./store.selectors";
@@ -21,7 +21,7 @@ export const getToDos = createEffect(
         store.select(todoSelectors.selectPage),
         store.select(todoSelectors.selectPageSize)
       ),
-      exhaustMap(([action, filters, page, pageSize]) => {
+      switchMap(([action, filters, page, pageSize]) => {
         const f = "filterValue" in action ? action.filterValue : filters.status;
         const pS = "pageSize" in action ? action.pageSize : pageSize;
         const p = "page" in action ? action.page : page;
@@ -66,7 +66,7 @@ export const updateToDo = createEffect(
   (actions$ = inject(Actions), toDoService = inject(ToDosService)) => {
     return actions$.pipe(
       ofType(storeActions.toDosActions.updateToDo),
-      exhaustMap((action) =>
+      concatMap((action) =>
         toDoService.updateToDo(action.toDo).pipe(
           map((response: ResponseStatus) => storeActions.toDosActions.updateToDoSuccess(response)),
           catchError(() => EMPTY) // TODO: add error handle fn

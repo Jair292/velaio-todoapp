@@ -84,6 +84,13 @@
 
       .person-skills {
         padding-top: 0;
+
+        .chip {
+          margin-right: variables.$margin;
+          border: variables.$border-color 1px solid;
+          border-radius: variables.$border-radius;
+          padding: 0 variables.$padding;
+        }
       }
 
       .person-container {

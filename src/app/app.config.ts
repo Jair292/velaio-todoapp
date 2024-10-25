@@ -4,7 +4,7 @@ import {
   isDevMode,
   provideZoneChangeDetection,
 } from "@angular/core";
-import { provideRouter } from "@angular/router";
+import { provideRouter, withComponentInputBinding } from "@angular/router";
 import { provideHttpClient } from "@angular/common/http";
 import { routes } from "./app.routes";
 import { HttpClientInMemoryWebApiModule } from "angular-in-memory-web-api";
@@ -18,7 +18,7 @@ import * as todoEffects from "./store/store.effects";
 export const appConfig: ApplicationConfig = {
   providers: [
     provideZoneChangeDetection({ eventCoalescing: true }),
-    provideRouter(routes),
+    provideRouter(routes, withComponentInputBinding()),
     provideHttpClient(), // add prop withInterceptorsFromDi() if interceptores are required
     importProvidersFrom( // provide InMemoryWebApiModule after HttpClient
       HttpClientInMemoryWebApiModule.forRoot(InmemoryService, {

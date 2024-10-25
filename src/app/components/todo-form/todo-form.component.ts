@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, Input, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroupDirective, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ButtonDirective } from 'src/app/directives/button.directive';
@@ -23,11 +23,11 @@ import * as storeActions from 'src/app/store/store.actions';
 })
 export class TodoFormComponent {
   fb = inject(FormBuilder);
-  submitedTrigger$ = new Subject<void>();
   store = inject(Store<ToDosState>);
+  submitedTrigger$ = new Subject<void>();
+  @Input() todoId?: string;
 
   @ViewChild(FormGroupDirective) formDir!: FormGroupDirective;
-
   todoForm = this.createForm();
 
   ngOnInit() {
@@ -45,7 +45,6 @@ export class TodoFormComponent {
     if (this.todoForm.invalid) {
       return;
     }
-    // this.toDosService.addToDo(this.todoForm.value as Partial<ToDo>).subscribe();
     this.store.dispatch(storeActions.toDosActions.addToDo({ toDo: this.todoForm.value as Partial<ToDo> }));
     this.submitedTrigger$.next();
     this.formDir.resetForm();

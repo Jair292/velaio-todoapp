@@ -1,7 +1,7 @@
 import { Directive, HostBinding, Input, OnChanges, SimpleChanges } from '@angular/core';
 
 @Directive({
-  selector: 'button',
+  selector: 'button,a',
   standalone: true,
 })
 export class ButtonDirective implements OnChanges {

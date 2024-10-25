@@ -71,6 +71,9 @@
         font-weight: bold;
         font-size: variables.$font-size-medium;
         padding-bottom: variables.$padding;
+        span {
+          cursor: pointer;
+        }
       }
       .todo-sub-title {
         font-size: variables.$font-size-small;

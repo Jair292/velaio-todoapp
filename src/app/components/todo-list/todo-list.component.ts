@@ -12,6 +12,7 @@ import * as storeActions from '../../store/store.actions';
 import { selectForToDoList } from 'src/app/store/store.selectors';
 import { ListLoadingMode, StatePagination, ToDosState } from 'src/app/store/store.reducers';
 import { InfiniteScrollDirective } from 'ngx-infinite-scroll';
+import { Router } from '@angular/router';
 
 @Component({
   selector: "app-todo-list",
@@ -30,6 +31,7 @@ import { InfiniteScrollDirective } from 'ngx-infinite-scroll';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TodoListComponent implements OnInit {
+  router = inject(Router);
   @ViewChild('list') list!: ElementRef;
 
   toDosService = inject(ToDosService);
@@ -61,12 +63,16 @@ export class TodoListComponent implements OnInit {
     this.store.dispatch(storeActions.listActions.getFilteredToDos({ filterValue: value, page: 1, reset: true }));
   }
 
-  changeStatus(toDo: ToDo) {
+  changeToDoStatus(toDo: ToDo) {
     const updatedToDo: ToDo = {
       ...toDo,
       status: toDo.status == "open" ? "closed" : "open",
     }
     this.store.dispatch(storeActions.toDosActions.updateToDo({ toDo: updatedToDo }));
+  }
+
+  editToDo(toDo: ToDo) {
+    this.router.navigate(['todo-form', toDo.id]);
   }
 
   disableToDosContainer(viewState: ToDosState["viewState"]) {

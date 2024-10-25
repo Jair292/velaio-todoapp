@@ -1,4 +1,4 @@
-@import './variables';
+@use './variables' as variables;
 
 .btn {
   padding: 0.6em 2em;
@@ -13,6 +13,7 @@
   user-select: none;
   -webkit-user-select: none;
   touch-action: manipulation;
+  text-decoration: none;
   &:disabled {
     cursor: not-allowed;
     opacity: 0.5;
@@ -20,6 +21,11 @@
 
   &.small {
     padding: 0.4em 1.2em;
+    font-size: variables.$font-size-small;
+  }
+  &.medium {
+    padding: 0.4em 1.2em;
+    // font-size: variables.$font-size-medium;
   }
 }
 

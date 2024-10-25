@@ -4,7 +4,7 @@
     <div class="actions">
       <div class="action">
         <span class="title">Filter:</span>
-        <input type="radio" name="filter" id="filter-all" [value]="undefined" checked (change)="updateFilterValue('all')"><label for="filter-all">All</label>
+        <input type="radio" name="filter" id="filter-all" value="all" checked (change)="updateFilterValue('all')"><label for="filter-all">All</label>
         <input type="radio" name="filter" id="filter-open" value="open" (change)="updateFilterValue('open')"><label for="filter-open">Open</label>
         <input type="radio" name="filter" id="filter-closed" value="closed" (change)="updateFilterValue('closed')"><label for="filter-closed">Closed</label>
       </div>
@@ -17,30 +17,37 @@
       [infiniteScrollDisabled]="vm.viewState.listLoadingMode !== 'infinite-scrolling'"
       (scrolled)="onScrollDown(vm.pagination)" class="todos-container"
       [class.disabled]="disableToDosContainer(vm.viewState)">
-      <ng-container *ngIf="vm.todos as ToDos">
-        <div *ngIf="ToDos.length == 0" class="no-todos">
-          No ToDos
-        </div>
-        <div class="todo" *ngFor="let todo of ToDos; let i = index; trackBy: trackByFn">
-          <span class="todo-title">{{displayToDoIndex(i, vm.pagination.page, vm.viewState.listLoadingMode)}}.
-            <input type="checkbox" (click)="changeStatus(todo)" [checked]="getStatusForCheckbox(todo.status)"/> {{todo.name | titlecase}} - {{todo.endDate | date}}</span>
-          <span class="todo-sub-title">Associated people:</span>
-          @for (person of todo.persons; let j = $index; track trackByFn) {
-            <div class="person-container">
-              <span class="person-name">{{person.name}} ({{person.age}})</span>
-              <span class="person-skills">
-                Skills: @for (skill of person.skills; let k = $index; track trackByFn) {
-                  <span class="chip">{{skill}}</span>
-                }
+      @if (vm.todos; as ToDos) {
+        @if (ToDos.length == 0) {
+          <div class="no-todos">
+            No ToDos
+          </div>
+        } @else {
+          @for (todo of ToDos; let i = $index; track trackByFn) {
+            <div class="todo">
+              <span class="todo-title">{{displayToDoIndex(i, vm.pagination.page, vm.viewState.listLoadingMode)}}.
+                <input type="checkbox" (click)="changeToDoStatus(todo)" [checked]="getStatusForCheckbox(todo.status)"/>
+                <span (click)="editToDo(todo)">{{todo.name | titlecase}} - {{todo.endDate | date}}</span>
               </span>
+              <span class="todo-sub-title">Associated people:</span>
+              @for (person of todo.persons; let j = $index; track trackByFn) {
+                <div class="person-container">
+                  <span class="person-name">{{person.name}} ({{person.age}})</span>
+                  <span class="person-skills">
+                    Skills: @for (skill of person.skills; let k = $index; track k) {
+                      <span class="chip">{{skill}}</span>
+                    }
+                  </span>
+                </div>
+              }
             </div>
           }
-        </div>
-      </ng-container>
+        }
+      }
     </div>
-    <div *ngIf="vm.viewState.listLoadingMode == 'pagination'" class="pagination">
+    @if (vm.viewState.listLoadingMode == 'pagination') {
       <app-paginator [page]="vm.pagination.page" [totalPages]="vm.pagination.pagesCount" (pageChanged)="changePage($event)"></app-paginator>
-    </div>
+    }
   } @else {
     <app-loader></app-loader>
   }

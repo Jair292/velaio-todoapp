@@ -1,6 +1,6 @@
 <fieldset>
   <legend>{{legend}}</legend>
-  <div class="fields" *ngIf="persons.length > 0" [formArrayName]="formArrayName">
+  <div class="fields" [formArrayName]="formArrayName">
     @for (person of persons.controls; track trackByFn; let i = $index) {
       <ng-container [formGroupName]="i">
         <div class="content">
@@ -18,7 +18,9 @@
             <button type="button" size="small" [disabled]="persons.length <= 1" (click)="removePerson(i)">-</button>
           </div>
         </div>
-        <app-skills *ngIf="withSkills" formArrayName="skills" legend="Skills"></app-skills>
+        @if (withSkills) {
+          <app-skills formArrayName="skills" legend="Skills"/>
+        }
       </ng-container>
     }
   </div>

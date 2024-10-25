@@ -4,7 +4,8 @@ import { commonImports, FormFields, viewProviders } from 'src/app/directives/for
 import { CustomValidators } from 'src/app/from-validators/validators';
 import { ButtonDirective } from 'src/app/directives/button.directive';
 import { trackByFn } from 'src/app/helpers/common';
-import { takeUntil, tap } from 'rxjs';
+import { tap } from 'rxjs';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Store } from '@ngrx/store';
 import { ToDosState } from 'src/app/store/store.reducers';
 import { selectSkills } from 'src/app/store/store.selectors';
@@ -41,7 +42,7 @@ export class SkillsComponent extends FormFields {
     this.formSubmited$?.pipe(
       tap(() => this.skills.controls.forEach(control => control.reset())),
       tap(() => this.cdr.markForCheck()),
-      takeUntil(this.destroy$)
+      takeUntilDestroyed(this.dr)
     ).subscribe();
   }
 

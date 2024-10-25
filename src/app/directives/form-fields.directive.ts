@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectorRef, Directive, inject, Input, OnDestroy } from '@angular/core';
+import { ChangeDetectorRef, DestroyRef, Directive, Inject, inject, Input, OnDestroy, Optional } from '@angular/core';
 import { ControlContainer, FormArray, FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { Subject } from 'rxjs';
+import { BehaviorSubject, Subject } from 'rxjs';
 import { FORM_SUBMIT_TOKEN } from '../helpers/common';
 
 export const viewProviders = [
@@ -23,14 +23,13 @@ export class FormFields implements OnDestroy {
   formSubmited$ = inject(FORM_SUBMIT_TOKEN, {optional: true});
   parentContainer = inject(ControlContainer);
   cdr = inject(ChangeDetectorRef);
-  destroy$ = new Subject<boolean>();
+  dr = inject(DestroyRef);
 
   get parentFormGroup (): FormGroup {
     return this.parentContainer.control as FormGroup;
   }
 
   ngOnDestroy(): void {
-    this.destroy$.next(true);
     this.parentFormGroup?.removeControl(this.formArrayName);
   }
 }

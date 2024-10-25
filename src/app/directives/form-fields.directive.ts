@@ -1,7 +1,6 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectorRef, DestroyRef, Directive, Inject, inject, Input, OnDestroy, Optional } from '@angular/core';
+import { ChangeDetectorRef, DestroyRef, Directive, inject, Input, OnDestroy } from '@angular/core';
 import { ControlContainer, FormArray, FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { BehaviorSubject, Subject } from 'rxjs';
 import { FORM_SUBMIT_TOKEN } from '../helpers/common';
 
 export const viewProviders = [

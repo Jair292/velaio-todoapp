@@ -3,13 +3,12 @@ import { Validators } from '@angular/forms';
 import { CustomValidators } from 'src/app/from-validators/validators';
 import { commonImports, FormFields, viewProviders } from 'src/app/directives/form-fields.directive';
 import { SkillsComponent } from '../skills/skills.component';
-import { ButtonDirective } from 'src/app/directives/button.directive';
 import { trackByFn } from 'src/app/helpers/common';
 
 @Component({
   selector: 'app-persons',
   standalone: true,
-  imports: [...commonImports, SkillsComponent, ButtonDirective],
+  imports: [...commonImports, SkillsComponent],
   templateUrl: './persons.component.html',
   styleUrls: ['./persons.component.scss'],
   viewProviders: [...viewProviders],
@@ -28,11 +27,11 @@ export class PersonsComponent extends FormFields implements OnInit {
   }
 
   createPersons() {
-    return this.fb.nonNullable.array([this.createPersonGroup()], [CustomValidators.notDuplicates()]);
+    return this.fb.array([this.createPersonGroup()], [CustomValidators.notDuplicates()]);
   }
 
   createPersonGroup() {
-    return this.fb.nonNullable.group({
+    return this.fb.group({
       name: ['', [ Validators.required, Validators.minLength(5)]],
       age: ['', [Validators.required, Validators.min(19)]]
     })

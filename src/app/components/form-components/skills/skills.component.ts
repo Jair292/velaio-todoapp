@@ -2,10 +2,7 @@ import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
 import { commonImports, FormFields, viewProviders } from 'src/app/directives/form-fields.directive';
 import { CustomValidators } from 'src/app/from-validators/validators';
-import { ButtonDirective } from 'src/app/directives/button.directive';
 import { trackByFn } from 'src/app/helpers/common';
-import { tap } from 'rxjs';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Store } from '@ngrx/store';
 import { ToDosState } from 'src/app/store/store.reducers';
 import { selectSkills } from 'src/app/store/store.selectors';
@@ -14,7 +11,7 @@ import { selectSkills } from 'src/app/store/store.selectors';
 @Component({
   selector: 'app-skills',
   standalone: true,
-  imports: [...commonImports, ButtonDirective],
+  imports: [...commonImports],
   templateUrl: './skills.component.html',
   styleUrls: ['./skills.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -34,20 +31,10 @@ export class SkillsComponent extends FormFields {
     } else {
       this.skills = this.formArray;
     }
-
-    this.subscribeToSubmit();
-  }
-
-  subscribeToSubmit() {
-    this.formSubmited$?.pipe(
-      tap(() => this.skills.controls.forEach(control => control.reset())),
-      tap(() => this.cdr.markForCheck()),
-      takeUntilDestroyed(this.dr)
-    ).subscribe();
   }
 
   createSkills() {
-    return this.fb.nonNullable.array<FormControl<string>>(
+    return this.fb.array<FormControl<string>>(
       [this.createSkillControl()], [Validators.minLength(1), CustomValidators.notDuplicates()]);
   }
 

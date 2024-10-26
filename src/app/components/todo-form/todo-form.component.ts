@@ -1,15 +1,13 @@
 import { ChangeDetectionStrategy, Component, inject, Input, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormBuilder, FormGroupDirective, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormBuilder, FormGroupDirective, NonNullableFormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ButtonDirective } from 'src/app/directives/button.directive';
 import { PersonsComponent } from '../form-components/persons/persons.component';
-import { FORM_SUBMIT_TOKEN } from 'src/app/helpers/common';
 import { Subject } from 'rxjs';
 import { ToDo } from 'src/app/models/todo';
 import { Store } from '@ngrx/store';
 import { ToDosState } from 'src/app/store/store.reducers';
 import * as storeActions from 'src/app/store/store.actions';
-import { SkillsService } from 'src/app/services/skills.service';
 
 @Component({
   selector: 'app-todo-form',
@@ -18,14 +16,10 @@ import { SkillsService } from 'src/app/services/skills.service';
   templateUrl: './todo-form.component.html',
   styleUrls: ['./todo-form.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  providers: [
-    { provide: FORM_SUBMIT_TOKEN, useFactory: () => inject(TodoFormComponent).submitedTrigger$ }
-  ],
 })
 export class TodoFormComponent {
-  fb = inject(FormBuilder);
+  fb = inject(NonNullableFormBuilder);
   store = inject(Store<ToDosState>);
-  submitedTrigger$ = new Subject<void>();
   @Input() todoId?: string;
 
   @ViewChild(FormGroupDirective) formDir!: FormGroupDirective;
@@ -36,7 +30,7 @@ export class TodoFormComponent {
   }
 
   createForm() {
-    return this.fb.nonNullable.group({
+    return this.fb.group({
       name: ['', [ Validators.required, Validators.minLength(5) ]],
       endDate: ['', Validators.required],
     });
@@ -46,8 +40,7 @@ export class TodoFormComponent {
     if (this.todoForm.invalid) {
       return;
     }
-    this.store.dispatch(storeActions.toDosActions.addToDo({ toDo: this.todoForm.value as Partial<ToDo> }));
-    this.submitedTrigger$.next();
+    this.store.dispatch(storeActions.toDoActions.addToDo({ toDo: this.todoForm.value as Partial<ToDo> }));
     this.formDir.resetForm();
   }
 }

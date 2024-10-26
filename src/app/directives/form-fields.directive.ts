@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectorRef, DestroyRef, Directive, inject, Input, OnDestroy } from '@angular/core';
-import { ControlContainer, FormArray, FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { FORM_SUBMIT_TOKEN } from '../helpers/common';
+import { DestroyRef, Directive, inject, Input, OnDestroy } from '@angular/core';
+import { ControlContainer, FormArray, FormGroup, NonNullableFormBuilder, ReactiveFormsModule } from '@angular/forms';
+import { ButtonDirective } from 'src/app/directives/button.directive';
 
 export const viewProviders = [
   {
@@ -10,7 +10,7 @@ export const viewProviders = [
   }
 ];
 
-export const commonImports = [CommonModule, ReactiveFormsModule];
+export const commonImports = [CommonModule, ReactiveFormsModule, ButtonDirective];
 
 @Directive()
 export class FormFields implements OnDestroy {
@@ -18,11 +18,8 @@ export class FormFields implements OnDestroy {
   @Input({required: true}) formArrayName: string = '';
   @Input() legend: string = '';
 
-  fb = inject(FormBuilder);
-  formSubmited$ = inject(FORM_SUBMIT_TOKEN, {optional: true});
+  fb = inject(NonNullableFormBuilder);
   parentContainer = inject(ControlContainer);
-  cdr = inject(ChangeDetectorRef);
-  dr = inject(DestroyRef);
 
   get parentFormGroup (): FormGroup {
     return this.parentContainer.control as FormGroup;

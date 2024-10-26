@@ -64,7 +64,7 @@ export const initialState: ToDosState = {
 
 export const todosReducer = createReducer(
   initialState,
-  on(storeActions.listActions.getToDosPage, (state, { page }) => {
+  on(storeActions.toDoListActions.getToDosPage, (state, { page }) => {
     return {
       ...state,
       viewState: {
@@ -77,7 +77,7 @@ export const todosReducer = createReducer(
       }
     }
   }),
-  on(storeActions.listActions.getFilteredToDos, (state) => {
+  on(storeActions.toDoListActions.getFilteredToDos, (state) => {
     return {
       ...state,
       viewState: {
@@ -86,7 +86,7 @@ export const todosReducer = createReducer(
       }
     }
   }),
-  on(storeActions.listActions.getToDosPageSuccess, (state, { toDos, status, pagination, reset }) => {
+  on(storeActions.toDoListActions.getToDosPageSuccess, (state, { toDos, status, pagination, reset }) => {
     return {
       ...state,
       data: {
@@ -108,7 +108,7 @@ export const todosReducer = createReducer(
       }
     }
   }),
-  on(storeActions.toDosActions.updateToDo, (state, { toDo }) => {
+  on(storeActions.toDoActions.updateToDo, (state, { toDo }) => {
     return {
       ...state,
       viewState: {
@@ -117,7 +117,7 @@ export const todosReducer = createReducer(
       }
     }
   }),
-  on(storeActions.toDosActions.updateToDoSuccess, (state, { status }) => {
+  on(storeActions.toDoActions.updateToDoSuccess, (state, { status }) => {
     return {
       ...state,
       viewState: {
@@ -135,7 +135,7 @@ export const todosReducer = createReducer(
       }
     }
   }),
-  on(storeActions.listActions.updateListLoadingMode, (state, { listLoadingMode }) => {
+  on(storeActions.toDoListActions.updateListLoadingMode, (state, { listLoadingMode }) => {
     return {
       ...state,
       pagination: paginationInitialState,

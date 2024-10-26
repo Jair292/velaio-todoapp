@@ -11,9 +11,9 @@ export const getToDos = createEffect(
   (actions$ = inject(Actions), toDoService = inject(ToDosService), store = inject(Store<AppState>)) => {
     return actions$.pipe(
       ofType(
-        storeActions.listActions.getToDosPage,
-        storeActions.listActions.getFilteredToDos,
-        storeActions.listActions.updateListLoadingMode,
+        storeActions.toDoListActions.getToDosPage,
+        storeActions.toDoListActions.getFilteredToDos,
+        storeActions.toDoListActions.updateListLoadingMode,
       ),
       withLatestFrom(
         store.select(todoSelectors.selectFilters),
@@ -27,7 +27,7 @@ export const getToDos = createEffect(
         const reset = "reset" in action ? true : false;
         return toDoService.requestToDos(fV, p, pS).pipe(
           map((requestResponse: RequestToDos) =>
-            storeActions.listActions.getToDosPageSuccess({
+            storeActions.toDoListActions.getToDosPageSuccess({
               toDos: requestResponse.data,
               status: fV,
               reset,
@@ -49,10 +49,10 @@ export const getToDos = createEffect(
 export const addTodo = createEffect(
   (actions$ = inject(Actions), toDoService = inject(ToDosService)) => {
     return actions$.pipe(
-      ofType(storeActions.toDosActions.addToDo),
+      ofType(storeActions.toDoActions.addToDo),
       exhaustMap((action) =>
         toDoService.addToDo(action.toDo).pipe(
-          map((response: ResponseStatus) => storeActions.toDosActions.addToDoSuccess(response)),
+          map((response: ResponseStatus) => storeActions.toDoActions.addToDoSuccess(response)),
           catchError(() => EMPTY) // TODO: add error handle fn
         )
       )
@@ -64,10 +64,10 @@ export const addTodo = createEffect(
 export const updateToDo = createEffect(
   (actions$ = inject(Actions), toDoService = inject(ToDosService)) => {
     return actions$.pipe(
-      ofType(storeActions.toDosActions.updateToDo),
+      ofType(storeActions.toDoActions.updateToDo),
       concatMap((action) =>
         toDoService.updateToDo(action.toDo).pipe(
-          map((response: ResponseStatus) => storeActions.toDosActions.updateToDoSuccess(response)),
+          map((response: ResponseStatus) => storeActions.toDoActions.updateToDoSuccess(response)),
           catchError(() => EMPTY) // TODO: add error handle fn
         )
       )

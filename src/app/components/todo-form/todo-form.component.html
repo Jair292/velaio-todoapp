@@ -8,6 +8,8 @@
     <label for="endDate">End Date</label>
     <input type="date" formControlName="endDate" id="endDate">
   </div>
-  <app-persons [withSkills]="true" formArrayName="persons" legend="Persons"></app-persons>
+  @defer {
+    <app-persons [withSkills]="true" formArrayName="persons" legend="Persons"></app-persons>
+  }
   <button type="submit">Save ToDo</button>
 </form>

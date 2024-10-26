@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, InjectionToken } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
 import { commonImports, FormFields, viewProviders } from 'src/app/directives/form-fields.directive';
 import { CustomValidators } from 'src/app/from-validators/validators';
@@ -7,7 +7,6 @@ import { Store } from '@ngrx/store';
 import { ToDosState } from 'src/app/store/store.reducers';
 import { selectSkills } from 'src/app/store/store.selectors';
 
-
 @Component({
   selector: 'app-skills',
   standalone: true,
@@ -15,7 +14,7 @@ import { selectSkills } from 'src/app/store/store.selectors';
   templateUrl: './skills.component.html',
   styleUrls: ['./skills.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  viewProviders: [...viewProviders]
+  viewProviders: [...viewProviders],
 })
 export class SkillsComponent extends FormFields {
   store = inject(Store<ToDosState>);

@@ -19,7 +19,9 @@
           </div>
         </div>
         @if (withSkills) {
-          <app-skills formArrayName="skills" legend="Skills"/>
+          @defer {
+            <app-skills formArrayName="skills" legend="Skills"/>
+          }
         }
       </ng-container>
     }

@@ -21,7 +21,6 @@ export class TodoFormComponent {
   fb = inject(NonNullableFormBuilder);
   store = inject(Store<ToDosState>);
   @Input() todoId?: string;
-
   @ViewChild(FormGroupDirective) formDir!: FormGroupDirective;
   todoForm = this.createForm();
 

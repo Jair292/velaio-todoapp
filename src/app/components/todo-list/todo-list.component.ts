@@ -1,8 +1,7 @@
 import { ChangeDetectionStrategy, Component, ElementRef, inject, OnInit, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Person, ToDo } from 'src/app/models/todo';
+import { ToDo } from 'src/app/models/todo';
 import { LoaderComponent } from '../loader/loader.component';
-import { ToDoFilterPipe } from 'src/app/pipes/todofilter.pipe';
 import { FilterValueStatus, ToDosService } from 'src/app/services/todos.service';
 import { ButtonDirective } from 'src/app/directives/button.directive';
 import { FormsModule } from '@angular/forms';
@@ -21,7 +20,6 @@ import { trackByFn } from 'src/app/helpers/common';
   imports: [
     CommonModule,
     LoaderComponent,
-    ToDoFilterPipe,
     ButtonDirective,
     FormsModule,
     PaginatorComponent,
@@ -33,10 +31,9 @@ import { trackByFn } from 'src/app/helpers/common';
 })
 export class TodoListComponent implements OnInit {
   router = inject(Router);
-  @ViewChild('list') list!: ElementRef;
-
   toDosService = inject(ToDosService);
   store = inject(Store<ToDosState>);
+  @ViewChild('list') list!: ElementRef;
   vmState$ = this.store.select(selectForToDoList);
   trackByFn = trackByFn;
 

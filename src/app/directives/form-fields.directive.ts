@@ -14,12 +14,11 @@ export const commonImports = [CommonModule, ReactiveFormsModule, ButtonDirective
 
 @Directive()
 export class FormFields implements OnDestroy {
+  fb = inject(NonNullableFormBuilder);
+  parentContainer = inject(ControlContainer);
   @Input('data') formArray!: FormArray;
   @Input({required: true}) formArrayName: string = '';
   @Input() legend: string = '';
-
-  fb = inject(NonNullableFormBuilder);
-  parentContainer = inject(ControlContainer);
 
   get parentFormGroup (): FormGroup {
     return this.parentContainer.control as FormGroup;

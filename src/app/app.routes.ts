@@ -1,4 +1,7 @@
 import { Routes } from "@angular/router";
+import { SkillsService } from "./services/skills.service";
+import { provideEffects } from "@ngrx/effects";
+import * as skillsEffects from "./store/store.skills.effects";
 
 export const routes: Routes = [
   {
@@ -15,20 +18,28 @@ export const routes: Routes = [
       ),
   },
   {
-    path: "todo-form/:todoId",
-    pathMatch: "full",
-    loadComponent: () =>
-      import("./components/todo-form/todo-form.component").then(
-        (c) => c.TodoFormComponent
-      ),
-  },
-  {
     path: "todo-form",
-    pathMatch: "full",
     loadComponent: () =>
-      import("./components/todo-form/todo-form.component").then(
-        (c) => c.TodoFormComponent
-      ),
+      import(
+        "./components/todo-form-controller/todo-form-controller.component"
+      ).then((c) => c.TodoFormControllerComponent),
+    children: [
+      {
+        path: ":todoId",
+        loadComponent: () =>
+          import("./components/todo-form/todo-form.component").then(
+            (c) => c.TodoFormComponent
+          ),
+      },
+      {
+        path: "new",
+        loadComponent: () =>
+          import("./components/todo-form/todo-form.component").then(
+            (c) => c.TodoFormComponent
+          ),
+      },
+    ],
+    providers: [SkillsService, provideEffects(skillsEffects)],
   },
   {
     path: "404",
@@ -41,6 +52,5 @@ export const routes: Routes = [
   {
     path: "**",
     redirectTo: "404",
-    // loadComponent: () => import("./components/not-found/not-found.component").then((c) => c.NotFoundComponent),
   },
 ];

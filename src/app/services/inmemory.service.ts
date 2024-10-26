@@ -67,7 +67,7 @@ export class InmemoryService implements InMemoryDbService {
       })
     ];
 
-    const skills = [...skillsList, skillsList2];
+    const skills = [...skillsList, ...skillsList2];
     console.log('inmemory service is working');
     return { todos, skills };
   }

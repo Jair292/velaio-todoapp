@@ -9,6 +9,7 @@ import { ToDo } from 'src/app/models/todo';
 import { Store } from '@ngrx/store';
 import { ToDosState } from 'src/app/store/store.reducers';
 import * as storeActions from 'src/app/store/store.actions';
+import { SkillsService } from 'src/app/services/skills.service';
 
 @Component({
   selector: 'app-todo-form',
@@ -18,7 +19,7 @@ import * as storeActions from 'src/app/store/store.actions';
   styleUrls: ['./todo-form.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [
-    { provide: FORM_SUBMIT_TOKEN, useFactory: () => inject(TodoFormComponent).submitedTrigger$ },
+    { provide: FORM_SUBMIT_TOKEN, useFactory: () => inject(TodoFormComponent).submitedTrigger$ }
   ],
 })
 export class TodoFormComponent {

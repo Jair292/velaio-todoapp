@@ -13,7 +13,7 @@ import { provideStore } from "@ngrx/store";
 import { todosReducer } from "./store/store.reducers";
 import { provideEffects } from "@ngrx/effects";
 import { provideStoreDevtools } from "@ngrx/store-devtools";
-import * as todoEffects from "./store/store.effects";
+import * as todoEffects from "./store/store.todos.effects";
 
 export const appConfig: ApplicationConfig = {
   providers: [

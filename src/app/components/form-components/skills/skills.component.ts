@@ -23,8 +23,6 @@ export class SkillsComponent extends FormFields {
   skills = this.createSkills();
   trackByFn = trackByFn;
 
-  changeObserver$ = this.skills.valueChanges;
-
   ngOnInit(): void {
     if (!this.formArray) {
       this.parentFormGroup.addControl(this.formArrayName, this.skills);

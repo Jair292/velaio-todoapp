@@ -21,20 +21,22 @@ export const routes: Routes = [
     path: "todo-form",
     loadComponent: () =>
       import(
-        "./components/todo-form-controller/todo-form-controller.component"
+        "./components/forms/todo-form-controller/todo-form-controller.component"
       ).then((c) => c.TodoFormControllerComponent),
     children: [
       {
-        path: ":todoId",
+        path: "edit/:toDoId",
+        pathMatch: "full",
         loadComponent: () =>
-          import("./components/todo-form/todo-form.component").then(
+          import("./components/forms/todo-form/todo-form.component").then(
             (c) => c.TodoFormComponent
           ),
       },
       {
         path: "new",
+        pathMatch: "full",
         loadComponent: () =>
-          import("./components/todo-form/todo-form.component").then(
+          import("./components/forms/todo-form/todo-form.component").then(
             (c) => c.TodoFormComponent
           ),
       },

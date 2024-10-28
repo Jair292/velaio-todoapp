@@ -6,7 +6,7 @@ export interface AppState {
 }
 
 // Data
-export const selectTodos = (state: AppState) => state.appState.data.toDos;
+export const selectToDos = (state: AppState) => state.appState.data.toDos;
 export const selectSkills = (state: AppState) => state.appState.data.skills;
 
 // Filters
@@ -29,13 +29,13 @@ export const selectErrors = (state: AppState) => state.appState.errors;
 
 // components selectors
 export const selectForToDoList = createSelector(
-  selectTodos,
+  selectToDos,
   selectViewState,
   selectPagination,
   selectFilters,
-  (todos, viewState, pagination, filters) => {
+  (toDos, viewState, pagination, filters) => {
     return {
-      todos,
+      toDos,
       viewState,
       pagination,
       filters

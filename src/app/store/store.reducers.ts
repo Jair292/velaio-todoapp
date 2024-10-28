@@ -108,6 +108,19 @@ export const todosReducer = createReducer(
       }
     }
   }),
+  on(storeActions.toDoListActions.resetList, (state) => {
+    return {
+      ...state,
+      data: {
+        ...state.data,
+        toDos: [],
+      },
+      viewState: {
+        ...state.viewState,
+        loadingToDosInitial: true
+      }
+    }
+  }),
   on(storeActions.toDoActions.updateToDo, (state, { toDo }) => {
     return {
       ...state,

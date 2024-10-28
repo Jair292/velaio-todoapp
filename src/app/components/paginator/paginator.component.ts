@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ButtonDirective } from 'src/app/directives/button.directive';
+import { ButtonDirective } from '@directives/button.directive';
 import { BehaviorSubject } from 'rxjs';
 
 @Component({

@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { DestroyRef, Directive, inject, Input, OnDestroy } from '@angular/core';
 import { ControlContainer, FormArray, FormGroup, NonNullableFormBuilder, ReactiveFormsModule } from '@angular/forms';
-import { ButtonDirective } from 'src/app/directives/button.directive';
+import { ButtonDirective } from '@directives/button.directive';
 
 export const viewProviders = [
   {

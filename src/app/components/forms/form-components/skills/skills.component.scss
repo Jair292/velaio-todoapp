@@ -1,0 +1,14 @@
+@use '../../../../styles/variables' as variables;
+@import '../../../../styles/form';
+@import '../../../../styles/button';
+
+
+:host {
+  padding: variables.$padding;
+}
+
+fieldset {
+  .fields {
+    gap: variables.$padding;
+  }
+}

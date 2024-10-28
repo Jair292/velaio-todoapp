@@ -1,18 +1,17 @@
 import { ChangeDetectionStrategy, Component, ElementRef, inject, OnInit, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ToDo } from 'src/app/models/todo';
+import { ToDo } from '@models/todo';
 import { LoaderComponent } from '../loader/loader.component';
-import { FilterValueStatus, ToDosService } from 'src/app/services/todos.service';
-import { ButtonDirective } from 'src/app/directives/button.directive';
+import { FilterValueStatus, ToDosService } from '@services/todos.service';
+import { ButtonDirective } from '@directives/button.directive';
 import { FormsModule } from '@angular/forms';
 import { PaginatorComponent } from '../paginator/paginator.component';
 import { Store } from '@ngrx/store';
-import * as storeActions from '../../store/store.actions';
-import { selectForToDoList } from 'src/app/store/store.selectors';
-import { ListLoadingMode, StatePagination, ToDosState } from 'src/app/store/store.reducers';
+import * as storeActions from '@store/store.actions';
+import { selectForToDoList } from '@store/store.selectors';
+import { ListLoadingMode, StatePagination, ToDosState } from '@store/store.reducers';
 import { InfiniteScrollDirective } from 'ngx-infinite-scroll';
 import { Router } from '@angular/router';
-import { trackByFn } from 'src/app/helpers/common';
 
 @Component({
   selector: "app-todo-list",
@@ -35,14 +34,13 @@ export class TodoListComponent implements OnInit {
   store = inject(Store<ToDosState>);
   @ViewChild('list') list!: ElementRef;
   vmState$ = this.store.select(selectForToDoList);
-  trackByFn = trackByFn;
 
   ngOnInit() {
     this.store.dispatch(storeActions.toDoListActions.getToDosPage({ page: 1 }));
   }
 
   ngOnDestroy() {
-    // this.store.dispatch(storeActions.toDoListActions.resetList());
+    this.store.dispatch(storeActions.toDoListActions.resetList());
   }
 
   displayToDoIndex(i: number, page: number, mode: ListLoadingMode) {
@@ -75,7 +73,7 @@ export class TodoListComponent implements OnInit {
   }
 
   editToDo(toDo: ToDo) {
-    this.router.navigate(['todo-form', toDo.id]);
+    this.router.navigate(['todo-form/edit', toDo.id]);
   }
 
   disableToDosContainer(viewState: ToDosState["viewState"]) {

@@ -17,24 +17,24 @@
       [infiniteScrollDisabled]="vm.viewState.listLoadingMode !== 'infinite-scrolling'"
       (scrolled)="onScrollDown(vm.pagination)" class="todos-container"
       [class.disabled]="disableToDosContainer(vm.viewState)">
-      @if (vm.todos; as ToDos) {
+      @if (vm.toDos; as ToDos) {
         @if (ToDos.length == 0) {
           <div class="no-todos">
             No ToDos
           </div>
         } @else {
-          @for (todo of ToDos; let i = $index; track trackByFn) {
+          @for (todo of ToDos; let i = $index; track todo.id) {
             <div class="todo">
               <span class="todo-title">{{displayToDoIndex(i, vm.pagination.page, vm.viewState.listLoadingMode)}}.
                 <input type="checkbox" (click)="changeToDoStatus(todo)" [checked]="getStatusForCheckbox(todo.status)"/>
                 <span (click)="editToDo(todo)">{{todo.name | titlecase}} - {{todo.endDate | date}}</span>
               </span>
               <span class="todo-sub-title">Associated people:</span>
-              @for (person of todo.persons; let j = $index; track trackByFn) {
+              @for (person of todo.persons; let j = $index; track person.name) {
                 <div class="person-container">
                   <span class="person-name">{{person.name}} ({{person.age}})</span>
                   <span class="person-skills">
-                    Skills: @for (skill of person.skills; let k = $index; track k) {
+                    Skills: @for (skill of person.skills; track skill) {
                       <span class="chip">{{skill}}</span>
                     }
                   </span>

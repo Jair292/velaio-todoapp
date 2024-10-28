@@ -52,7 +52,7 @@ export class InmemoryService implements InMemoryDbService {
     const todos: ToDo[] = [
       ...Array.from({length: 100}, (_, i) => {
         return {
-          id: this.generateRandomId(),
+          id: i+1,
           name: `${faker.helpers.arrayElement(todoNames)}-${i+1}`,
           endDate: faker.date.recent(),
           status: faker.helpers.arrayElement(['open', 'closed']),
@@ -68,7 +68,6 @@ export class InmemoryService implements InMemoryDbService {
     ];
 
     const skills = [...skillsList, ...skillsList2];
-    console.log('inmemory service is working');
     return { todos, skills };
   }
 
@@ -139,7 +138,7 @@ export class InmemoryService implements InMemoryDbService {
     if (collectionName === 'todos') {
       const collection = requestInfo.collection as ToDo[];
       let item = requestInfo.utils.getJsonBody(requestInfo.req)
-      item["id"] = this.generateRandomId();
+      item["id"] = this.generateRandomId(collection.length + 1);
       collection.push(item);
 
       const options: ResponseOptions = {

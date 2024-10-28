@@ -1,9 +1,8 @@
-import { Component, Injectable, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { Validators } from '@angular/forms';
-import { CustomValidators } from 'src/app/from-validators/validators';
-import { commonImports, FormFields, viewProviders } from 'src/app/directives/form-fields.directive';
+import { CustomValidators } from '@components/forms/from-validators/validators';
+import { commonImports, FormFields, viewProviders } from '@directives/form-fields.directive';
 import { SkillsComponent } from '../skills/skills.component';
-import { trackByFn } from 'src/app/helpers/common';
 
 @Component({
   selector: 'app-persons',
@@ -16,7 +15,6 @@ import { trackByFn } from 'src/app/helpers/common';
 export class PersonsComponent extends FormFields implements OnInit {
   @Input() withSkills: boolean = false;
   persons = this.createPersons();
-  trackByFn = trackByFn;
 
   ngOnInit(): void {
     if (!this.formArray) {

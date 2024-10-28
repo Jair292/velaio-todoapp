@@ -23,6 +23,7 @@ export const toDoListActions = createActionGroup({
     'Get ToDos Page': props<{ page: number, pageSize?: number }>(),
     'Get ToDos Page Success': props<{ toDos: ToDo[], status: FilterValueStatus, pagination: Pagination, reset: boolean }>(),
     'Get Filtered ToDos': props<{ filterValue: FilterValueStatus, page: 1, pageSize?: number, reset?: boolean }>(), // TODO: merge into get todos page action
+    'Reset List': emptyProps(),
     'Update List Loading Mode': props<{ listLoadingMode:  ListLoadingMode, reset?: boolean }>(),
   }
 });

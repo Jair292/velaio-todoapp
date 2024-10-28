@@ -1,7 +1,7 @@
 <fieldset>
   <legend>{{legend}}</legend>
   <div class="fields" [formArrayName]="formArrayName">
-    @for (skill of skills.controls; track trackByFn; let i = $index) {
+    @for (skill of skills.controls; track skill; let i = $index) {
       <div class="content">
         <div class="list">
           <div class="field">

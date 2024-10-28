@@ -1,11 +1,10 @@
-import { ChangeDetectionStrategy, Component, inject, InjectionToken } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
-import { commonImports, FormFields, viewProviders } from 'src/app/directives/form-fields.directive';
-import { CustomValidators } from 'src/app/from-validators/validators';
-import { trackByFn } from 'src/app/helpers/common';
+import { commonImports, FormFields, viewProviders } from '@directives/form-fields.directive';
+import { CustomValidators } from '@components/forms/from-validators/validators';
 import { Store } from '@ngrx/store';
-import { ToDosState } from 'src/app/store/store.reducers';
-import { selectSkills } from 'src/app/store/store.selectors';
+import { ToDosState } from '@store/store.reducers';
+import { selectSkills } from '@store/store.selectors';
 
 @Component({
   selector: 'app-skills',
@@ -20,7 +19,6 @@ export class SkillsComponent extends FormFields {
   store = inject(Store<ToDosState>);
   skillList$ = this.store.select(selectSkills);
   skills = this.createSkills();
-  trackByFn = trackByFn;
 
   ngOnInit(): void {
     if (!this.formArray) {

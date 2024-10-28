@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink, RouterLinkActive } from '@angular/router';
-import { ButtonDirective } from 'src/app/directives/button.directive';
+import { ButtonDirective } from '@directives/button.directive';
 
 @Component({
   selector: 'app-header',

@@ -2,6 +2,7 @@ import { Routes } from "@angular/router";
 import { SkillsService } from "./services/skills.service";
 import { provideEffects } from "@ngrx/effects";
 import * as skillsEffects from "./store/store.skills.effects";
+import { ROUTE_PARAMS } from "./helpers/route-params";
 
 export const routes: Routes = [
   {
@@ -25,7 +26,7 @@ export const routes: Routes = [
       ).then((c) => c.TodoFormControllerComponent),
     children: [
       {
-        path: "edit/:toDoId",
+        path: `edit/:${ROUTE_PARAMS.toDoId}`,
         pathMatch: "full",
         loadComponent: () =>
           import("./components/forms/todo-form/todo-form.component").then(

@@ -1,22 +1,41 @@
-import { createSelector } from "@ngrx/store";
+import { createFeatureSelector, createSelector } from "@ngrx/store";
 import { ToDosState } from "./store.reducers";
 
 export interface AppState {
   appState: ToDosState
 }
 
+export const selectToDosState = createFeatureSelector<AppState['appState']>('appState');
+
 // Data
-export const selectToDos = (state: AppState) => state.appState.data.toDos;
-export const selectSkills = (state: AppState) => state.appState.data.skills;
+export const selectData = createSelector(selectToDosState, (state: AppState['appState']) => {
+  return state.data
+});
+export const selectToDos = createSelector(selectData, (state: AppState['appState']['data']) => {
+  return state.toDos
+});
+export const selectSkills = createSelector(selectData, (state: AppState['appState']['data']) => {
+  return state.skills
+});
 
 // Filters
-export const selectFilters = (state: AppState) => state.appState.filters;
+export const selectFilters = createSelector(selectToDosState, (state: AppState['appState']) => {
+  return state.filters
+});
 
 // View State
-export const selectViewState = (state: AppState) => state.appState.viewState;
-export const selectLoadingToDosInitial = (state: AppState) => state.appState.viewState.loadingToDosInitial;
-export const selectLoadingToDos = (state: AppState) => state.appState.viewState.loadingToDos;
-export const selectUpdatingToDo = (state: AppState) => state.appState.viewState.updatingToDo;
+export const selectViewState = createSelector(selectToDosState, (state: AppState['appState']) => {
+  return state.viewState
+});
+export const selectLoadingToDosInitial = createSelector(selectViewState, (state: AppState['appState']['viewState']) => {
+  return state.loadingToDosInitial
+});
+export const selectLoadingToDos = createSelector(selectViewState, (state: AppState['appState']['viewState']) => {
+  return state.loadingToDos
+});
+export const selectUpdatingToDo = createSelector(selectViewState, (state: AppState['appState']['viewState']) => {
+  return state.updatingToDo
+});
 
 // Pagination
 export const selectPagination = (state: AppState) => state.appState.pagination;

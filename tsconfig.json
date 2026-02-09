@@ -27,11 +27,13 @@
       "@app/*": ["app/*"],
       "@components/*": ["app/components/*"],
       "@services/*": ["app/services/*"],
+      "@services2/*": ["app/services/*"],
       "@form/*": ["app/components/form/*"],
       "@store/*": ["app/store/*"],
       "@helpers/*": ["app/helpers/*"],
       "@directives/*": ["app/directives/*"],
       "@models/*": ["app/models/*"],
+
     }
   },
   "angularCompilerOptions": {

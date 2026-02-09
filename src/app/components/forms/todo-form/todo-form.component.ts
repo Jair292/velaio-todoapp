@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, inject, Input, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormGroupDirective, NonNullableFormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormControl, FormGroupDirective, NonNullableFormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ButtonDirective } from '@directives/button.directive';
 import { PersonsComponent } from '../form-components/persons/persons.component';
 import { Store } from '@ngrx/store';

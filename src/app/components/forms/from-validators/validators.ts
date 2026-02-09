@@ -6,18 +6,15 @@ export class CustomValidators {
 
   static notDuplicates(key: string = 'name') {
     return (control: AbstractControl): ValidationErrors | null => {
-
       if (!(control instanceof FormArray)) {
         return null;
       }
 
       const valueMap = new Set<string>();
-
       let result: DuplicateNameError = { duplicated: false, name: [] };
 
       for (let group of control.controls) {
         let nameControl;
-
         if (group instanceof FormControl) {
           nameControl = group;
         } else {
@@ -33,7 +30,6 @@ export class CustomValidators {
           valueMap.add(value);
         }
       }
-
       if (result.duplicated) {
         return result;
       }

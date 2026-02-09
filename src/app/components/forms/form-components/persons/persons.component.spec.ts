@@ -24,7 +24,6 @@ describe('PersonsComponent', () => {
       providers: [
         { provide: ControlContainer, useValue: formGroupDirective },
         { provide: ToDosService, useValue: mockToDosService },
-        { provide: ChangeDetectorRef, useValue: { markForCheck: () => {} } }
       ]
     }).compileComponents();
   });
